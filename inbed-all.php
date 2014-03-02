@@ -139,7 +139,7 @@ class Inbed {
 						$sc_url .= '&amp;download=true';
 					else
 						$sc_url .= '&amp;download=false';
-					return '<iframe width="100%" height="450" scrolling="no" frameborder="no" src="'.$sc_url.'"></iframe>';
+					return '<div class="audio-container"><iframe width="100%" height="450" scrolling="no" frameborder="no" src="'.$sc_url.'"></iframe></div>';
 					break;
 				default:
 					return 'Sorry, but we couldn\'t figure out how to embed this tag.';
@@ -159,12 +159,12 @@ class Inbed {
 						$cards = '';
 					else
 						$cards = ' data-conversation="none"';
-					return '<blockquote class="twitter-tweet" lang="en"'.$cards.$conversation.'>'.$this->content.'</blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>';
+					return '<div class="twitter-container"><blockquote class="twitter-tweet" lang="en"'.$cards.$conversation.'>'.$this->content.'</blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div>';
 					break;
 				case 'image':
 					break;
 				case 'gist':
-					return '<script src="'.$this->url.'.js"></script>';
+					return '<div class="gist-container"><script src="'.$this->url.'.js"></script></div>';
 					break;
 				default:
 					return 'Sorry, but we couldn\'t figure out how to embed this tag.';
