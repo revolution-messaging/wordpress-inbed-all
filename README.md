@@ -58,3 +58,20 @@ The best way I could figure here was to allow you to slap the embed code between
 
 * cards (string) On or Off, defaults to "off"
 * conversation (string) On or Off, defaults to "off"
+
+#### Wufoo
+
+Go to your Wufoo form manager (wufoo.com), then to Code -> Embed under the form you'd like to embed and grab the "Wordpress Shortcode" tag.
+
+    [wufoo username="walker" formhash="z1uj6kvm1qkq3zz" autoresize="true" height="606" header="show" ssl="true"]
+
+##### Options
+
+* username (string) required
+* formhash or id (string) required
+* autoresize (string) on or off. defaults to off
+* height (string) how high? defaults to 400
+* header (string) show or hide. defaults to hide.
+* ssl (string)  on or off. defaults to on.
+* iframe (string) on or off. defaults to off. javascript embed is used instead.
+* scrolling (string) on or off. defaults to on. this is for the iframe embed only.

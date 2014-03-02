@@ -49,7 +49,9 @@ class Inbed {
 			unset($id);
 		}
 		
-		if(isset($id)) {
+		if(isset($formhash)) {
+			$this->id = $formhash;
+		} else if(isset($id)) {
 			$this->id = $id;
 		}
 		
@@ -129,6 +131,55 @@ class Inbed {
 					else
 						$sc_url .= '&amp;download=false';
 					return '<div class="audio-container"><iframe width="100%" height="450" scrolling="no" frameborder="no" src="'.$sc_url.'"></iframe></div>';
+					break;
+				case: 'wufoo':
+					if(!isset($username)
+						return 'You need to provide your username for Wufoo.';
+					if(!isset($formhash) || !isset($id))
+						return 'You need to provide your formhash or form ID for Wufoo.';
+					if(isset($height) && is_int($height))
+						$height = $height;
+					else
+						$height = '400';
+					if(isset($autoresize) && $autoresize=='off')
+						$autoresize = 'false'
+					else
+						$autoresize = 'true';
+					if(isset($header) && $header=='show')
+						$header = 'show';
+					else
+						$header = 'hide';
+					if(isset($ssl) && $ssl=='off')
+						$ssl = 'false';
+					else
+						$ssl = 'true';
+					if(isset($scrolling) && $scrolling=='on')
+						$scrolling = 'yes';
+					else
+						$scrolling = 'no';
+					if(isset($iframe)) {
+						return '<div class="wufoo-container"><iframe height="'.$height.'" allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;border:none"  src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
+					} else {
+						return '<div class="wufoo-container"><div id="wufoo-'.$this->id.'">
+						Fill out my <a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'">online form</a>.
+						</div>
+						<script type="text/javascript">var '.$this->id.';(function(d, t) {
+						var s = d.createElement(t), options = {
+						\'userName\':\''.$username.'\',
+						\'formHash\':\''.$this->id.'\',
+						\'autoResize\':'.$autoresize.',
+						\'height\':\''.$height.'\',
+						\'async\':true,
+						\'host':'wufoo.com\',
+						\'header\':\''.$header.'\',
+						\'ssl\':'.$ssl.'};
+						s.src = (\'https:\' == d.location.protocol ? \'https://\' : \'http://\') + \'wufoo.com/scripts/embed/form.js\';
+						s.onload = s.onreadystatechange = function() {
+						var rs = this.readyState; if (rs) if (rs != \'complete\') if (rs != \'loaded\') return;
+						try { '.$this->id.' = new WufooForm();'.$this->id.'.initialize(options);'.$this->id.'.display(); } catch (e) {}};
+						var scr = d.getElementsByTagName(t)[0], par = scr.parentNode; par.insertBefore(s, scr);
+						})(document, \'script\');</script></div>';
+					}
 					break;
 				default:
 					return 'Sorry, but we couldn\'t figure out how to embed this tag.';
