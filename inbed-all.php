@@ -8,17 +8,6 @@ Author: Walker Hamilton
 Author URI: http://walkerhamilton.com/
 */
 
-// youtube, tubepress, vimeo - video="", url=""
-// img, flickr, url=""
-// ustream, justin.tv, ted, vine, blip.tv - url=""
-// spotify, bandcamp, rdio, soundcloud, audio
-// 
-// instagram, scribd, slideshare, googleapps, office
-// 
-// gist, googlemaps, polldaddy, wufoo
-// 
-// twitter-timeline - ?
-
 class Inbed {
 	
 	protected $tag = null;
