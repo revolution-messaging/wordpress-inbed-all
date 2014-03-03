@@ -24,6 +24,12 @@ A Wordpress plugin that allows you to embed stuff with shortcodes. The goal is t
 
     [vine url="https://vine.co/v/hPXTA6l9AqQ"]
 
+#### Instagram
+
+        [instagram id="i9pZitqsAa"]
+
+        [instagram url="http://instagram.com/p/i9pZitqsAa/"]
+
 #### Gists
 
     [gist url="https://gist.github.com/walker/8733217"]
