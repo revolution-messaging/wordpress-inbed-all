@@ -44,7 +44,7 @@ All options on:
 
     [soundcloud id="135692753" artwork="on" color="990000" related="on" autoplay="on" download="on" buying="on" liking="on" playcount="on" comments="on"]
 
-##### Options
+###### Options
 
 * id (string)
 * url (string)
@@ -64,7 +64,7 @@ The best way I could figure here was to allow you to slap the embed code between
 
     [twitter conversation="off" cards="off"]<blockquote class="twitter-tweet" lang="en"><p>Today&#39;s WOD: 12 pages on historic preservation tax credits…. 3, 2, 1, GO!</p>&mdash; Kyle Juvers (@kjuvers) <a href="https://twitter.com/kjuvers/statuses/440175998332440576">March 2, 2014</a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>[/twitter]
 
-##### Options
+###### Options
 
 * cards (string) On or Off, defaults to "off"
 * conversation (string) On or Off, defaults to "off"
@@ -75,7 +75,7 @@ Go to your Wufoo form manager (wufoo.com), then to Code -> Embed under the form 
 
     [wufoo username="walker" formhash="z1uj6kvm1qkq3zz" autoresize="true" height="606" header="show" ssl="true"]
 
-##### Options
+###### Options
 
 * username (string) required
 * formhash or id (string) required
