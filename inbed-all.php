@@ -20,6 +20,8 @@ class Inbed {
 	
 	private $vimeo_regex = '/vimeo.com\/([0-9]{1,})/';
 	
+	private $storify_regex = '/storify.com\/([\/\-\_a-zA-Z0-9]{1,})/';
+	
 	private $vine_regex = '/vine.co\/v\/([a-zA-Z0-9]{11})/';
 	
 	private $msnbc_content_regex = '/http:\/\/player.theplatform.com\/([a-zA-Z0-9=\/\?\_\-]{1,})\'/';
@@ -77,6 +79,9 @@ class Inbed {
 		
 		if($this->id && $this->tag) {
 			switch($this->tag) {
+				case 'storify':
+					return '<div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height=750 frameborder=no allowtransparency=true></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div>';
+					break;
 				case 'vimeo':
 					return '<div class="video-container"><iframe width="100%" height="100%" src="//player.vimeo.com/video/'.$this->id.'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
 					break;
@@ -198,6 +203,10 @@ class Inbed {
 					break;
 				case 'msnbc':
 					return '<iframe src="'.$this->url.'" height="100%" width="100%" scrolling="no" border="no" ></iframe>';
+					break;
+				case 'storify':
+					return '<div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height="100%" frameborder="no" allowtransparency="true"></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http://'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div>';
+					break;
 				case 'twitter':
 					if(isset($conversation) && $conversation=='on')
 						$conversation = '';
@@ -232,6 +241,8 @@ class Inbed {
 			$this->tag = 'youtube';
 		if(strpos($url, 'vimeo')!==false)
 			$this->tag = 'vimeo';
+		if(strpos($url, 'storify.com')!==false)
+			$this->tag = 'storify';
 		if(strpos($url, 'instagram.com')!==false)
 			$this->tag = 'instagram';
 		if(strpos($url, 'soundcloud.com')!==false)
@@ -250,6 +261,12 @@ class Inbed {
 				preg_match($this->vimeo_regex, $url, $matches);
 				if(isset($matches[1]))
 					$this->id = $matches[1];
+				break;
+			case 'storify':
+				$matches = array();
+				preg_match($this->storify_regex, $url, $matches);
+				if(isset($matches[1]))
+					$this->url = '//storify.com/'.$matches[1];
 				break;
 			case 'iframe':
 				$this->url = $url;

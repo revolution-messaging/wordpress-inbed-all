@@ -70,6 +70,10 @@ The best way I could figure here was to allow you to slap the embed code between
 * cards (string) On or Off, defaults to "off"
 * conversation (string) On or Off, defaults to "off"
 
+#### Storify
+
+    [storify url="http://storify.com/TheClimateDesk/obama-s-climate-plan"]
+
 #### Wufoo
 
 Go to your Wufoo form manager (wufoo.com), then to Code -> Embed under the form you'd like to embed and grab the "Wordpress Shortcode" tag.
