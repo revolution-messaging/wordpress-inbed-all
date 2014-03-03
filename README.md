@@ -26,9 +26,9 @@ A Wordpress plugin that allows you to embed stuff with shortcodes. The goal is t
 
 #### Instagram
 
-        [instagram id="i9pZitqsAa"]
+    [instagram id="i9pZitqsAa"]
 
-        [instagram url="http://instagram.com/p/i9pZitqsAa/"]
+    [instagram url="http://instagram.com/p/i9pZitqsAa/"]
 
 #### Gists
 
