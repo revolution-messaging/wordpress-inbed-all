@@ -3,6 +3,7 @@ Inbed all
 
 A Wordpress plugin that allows you to embed stuff with shortcodes. The goal is to support EVERYTHING.
 
+"Embed" is too generic, so I used "inbed", as in: ["Our greatest glory is not in never falling but in rising every time we fall [in bed]"](http://en.wikipedia.org/wiki/Fortune_cookie#In_popular_culture)
 
 #### Vimeo
 
