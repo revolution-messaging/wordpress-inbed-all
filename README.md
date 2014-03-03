@@ -70,6 +70,12 @@ The best way I could figure here was to allow you to slap the embed code between
 * cards (string) On or Off, defaults to "off"
 * conversation (string) On or Off, defaults to "off"
 
+#### Twitter Timeline
+
+Embed your saved twitter widget and a timeline.
+
+    [twitter-timeline url="https://twitter.com/TwitterMusic/timelines/393773266801659904" settings="https://twitter.com/settings/widgets/440598623684808704/edit"]
+
 #### Storify
 
     [storify url="http://storify.com/TheClimateDesk/obama-s-climate-plan"]

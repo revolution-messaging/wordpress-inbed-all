@@ -30,6 +30,10 @@ class Inbed {
 	
 	private $twitter_url_regex = '/href\=\"https\:\/\/twitter.com([\-\_\/0-9a-zA-Z]{5,})/';
 	
+	private $twitter_timeline_regex = '/twitter.com\/([a-zA-Z0-9\/]{3,})/';
+	
+	private $twitter_timeline_widget_regex = '/widgets\/([0-9]{3,})/';
+	
 	private $instagram_regex = '/instagram.com\/p\/([\-\_0-9a-zA-Z]{5,})/';
 	
 	public function embed($atts, $content, $tag) {
@@ -68,7 +72,12 @@ class Inbed {
 			if($this->tag=='soundcloud' && !defined('SOUNDCLOUD_SECRET')) {
 				return 'You must define soundcloud client secret in your functions.php or wp-config.php file: <code>define(\'SOUNDCLOUD_SECRET\', \'put your soundcloud application client secret here\');</code>';
 			}
-			$this->setURL($url);
+			if(isset($settings)){
+				// Right now, just twitter timelines
+				$this->setURL($url, array($settings));
+			} else {
+				$this->setURL($url);
+			}
 		}
 		
 		if(($tag == 'video' || $tag=='image') && (!isset($url) || empty($url))) {
@@ -79,6 +88,18 @@ class Inbed {
 		
 		if($this->id && $this->tag) {
 			switch($this->tag) {
+				case 'twitter-timeline':
+					if(!isset($this->id)) {
+						return 'You need to provide the id or the settings url of the widget you\'ve configured: <code>[twitter-timeline url="https://twitter.com/TwitterMusic/timelines/393773266801659904" settings="https://twitter.com/settings/widgets/440598623684808704/edit"]</code>';
+					} else if(!isset($this->url)) {
+						return 'You need to provide the URL of the timeline you want to embed: <code>[twitter-timeline url="https://twitter.com/TwitterMusic/timelines/393773266801659904" settings="https://twitter.com/settings/widgets/440598623684808704/edit"]</code>';
+					} else {
+						if(!isset($title)) {
+							$title = 'Twitter Timeline';
+						}
+						return '<a class="twitter-timeline" data-dnt="true" href="'.$this->url.'" data-widget-id="'.$this->id.'">'.$title.'</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
+					}
+					break;
 				case 'storify':
 					return '<div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height=750 frameborder=no allowtransparency=true></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div>';
 					break;
@@ -236,18 +257,20 @@ class Inbed {
 		}
 	}
 	
-	private function setURL($url) {
+	private function setURL($url, $settings) {
 		if(strpos($url, 'youtube')!==false || strpos($url, 'youtu.be')!==false)
 			$this->tag = 'youtube';
-		if(strpos($url, 'vimeo')!==false)
+		else if(strpos($url, 'twitter.com')!==false && strpos($url, 'timelines')!==false)
+			$this->tag = 'twitter-timeline';
+		else if(strpos($url, 'vimeo')!==false)
 			$this->tag = 'vimeo';
-		if(strpos($url, 'storify.com')!==false)
+		else if(strpos($url, 'storify.com')!==false)
 			$this->tag = 'storify';
-		if(strpos($url, 'instagram.com')!==false)
+		else if(strpos($url, 'instagram.com')!==false)
 			$this->tag = 'instagram';
-		if(strpos($url, 'soundcloud.com')!==false)
+		else if(strpos($url, 'soundcloud.com')!==false)
 			$this->tag = 'soundcloud';
-		if(strpos($url, 'vine.co')!==false)
+		else if(strpos($url, 'vine.co')!==false)
 			$this->tag = 'vine';
 		switch($this->tag) {
 			case 'soundcloud':
@@ -255,6 +278,18 @@ class Inbed {
 				$client = new Services_Soundcloud(SOUNDCLOUD_CLIENT_ID, SOUNDCLOUD_SECRET, 'http://',$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 				$track = json_decode($client->get('resolve', array('url' => $url)));
 				$this->id = $track->id;
+				break;
+			case 'twitter-timeline':
+				$matches = array();
+				preg_match($this->twitter_timeline_regex, $url, $matches);
+				if(isset($matches[1]))
+					$this->url = $matches[1];
+				$matches = array();
+				if(isset($settings[0])) {
+					preg_match($this->twitter_timeline_widget_regex, $settings[0], $matches);
+					if(isset($matches[1]))
+						$this->id = $matches[1];
+				}
 				break;
 			case 'vimeo':
 				$matches = array();
@@ -346,3 +381,4 @@ add_shortcode('polldaddy', 'inbed');
 add_shortcode('gist', 'inbed');
 add_shortcode('tweet', 'inbed');
 add_shortcode('twitter', 'inbed');
+add_shortcode('twitter-timeline', 'inbed');
