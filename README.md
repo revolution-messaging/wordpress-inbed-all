@@ -38,6 +38,10 @@ A Wordpress plugin that allows you to embed stuff with shortcodes. The goal is t
 
 Right now, I think this one relies on knowing the Soundcloud ID, but I'm working on getting track ID resolution via URLs working.
 
+    [soundcloud id="135692753"]
+
+All options on:
+
     [soundcloud id="135692753" artwork="on" color="990000" related="on" autoplay="on" download="on" buying="on" liking="on" playcount="on" comments="on"]
 
 ##### Options
