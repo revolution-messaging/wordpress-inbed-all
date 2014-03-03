@@ -196,8 +196,6 @@ class Inbed {
 					break;
 				case 'audio':
 					break;
-				case 'iframe':
-					return '<iframe src="'.$this->url.'" height="100%" width="100%" scrolling="no" border="no" ></iframe>';
 				case 'msnbc':
 					return '<iframe src="'.$this->url.'" height="100%" width="100%" scrolling="no" border="no" ></iframe>';
 				case 'twitter':
@@ -317,7 +315,6 @@ function inbed($atts=null, $content, $tag) {
 }
 
 add_shortcode('inbed', 'inbed');
-// add_shortcode('iframe', 'inbed');
 add_shortcode('msnbc', 'inbed');
 add_shortcode('ustream', 'inbed');
 add_shortcode('image', 'inbed');

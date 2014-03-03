@@ -97,7 +97,3 @@ Or with more:
 Just paste the MSNBC embed tag between the "msnbc" shortcodes.
 
     [msnbc]<iframe src='http://player.theplatform.com/p/2E2eJC/EmbeddedOffSite?guid=n_maddow_bblock_140228' height='500' width='635' scrolling='no' border='no' ></iframe>[/msnbc]
-
-#### iFrame
-
-    [iframe url="http://player.theplatform.com/p/2E2eJC/EmbeddedOffSite?guid=n_maddow_bblock_140228"]
