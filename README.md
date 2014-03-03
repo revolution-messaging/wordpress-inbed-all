@@ -73,6 +73,12 @@ The best way I could figure here was to allow you to slap the embed code between
 
 Go to your Wufoo form manager (wufoo.com), then to Code -> Embed under the form you'd like to embed and grab the "Wordpress Shortcode" tag.
 
+With the least set of options:
+
+    [wufoo username="walker" formhash="z1uj6kvm1qkq3zz"]
+
+Or with more:
+
     [wufoo username="walker" formhash="z1uj6kvm1qkq3zz" autoresize="true" height="606" header="show" ssl="true"]
 
 ###### Options
