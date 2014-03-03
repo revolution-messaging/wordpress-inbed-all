@@ -22,6 +22,8 @@ class Inbed {
 	
 	private $vine_regex = '/vine.co\/v\/([a-zA-Z0-9]{11})/';
 	
+	private $msnbc_content_regex = '/http:\/\/player.theplatform.com\/([a-zA-Z0-9=\/\?\_\-]{1,})\'/';
+	
 	private $twitter_content_regex = '/<blockquote[0-9a-zA-Z\-"\ \=]*>(.*)<\/blockquote>/';
 	
 	private $twitter_url_regex = '/href\=\"https\:\/\/twitter.com([\-\_\/0-9a-zA-Z]{5,})/';
@@ -194,6 +196,10 @@ class Inbed {
 					break;
 				case 'audio':
 					break;
+				case 'iframe':
+					return '<iframe src="'.$this->url.'" height="100%" width="100%" scrolling="no" border="no" ></iframe>';
+				case 'msnbc':
+					return '<iframe src="'.$this->url.'" height="100%" width="100%" scrolling="no" border="no" ></iframe>';
 				case 'twitter':
 					if(isset($conversation) && $conversation=='on')
 						$conversation = '';
@@ -247,6 +253,9 @@ class Inbed {
 				if(isset($matches[1]))
 					$this->id = $matches[1];
 				break;
+			case 'iframe':
+				$this->url = $url;
+				break;
 			case 'vine':
 				$matches = array();
 				preg_match($this->vine_regex, $url, $matches);
@@ -289,6 +298,13 @@ class Inbed {
 					$this->url = 'https://twitter.com'.$matches[1];
 				}
 			}
+		} else if(strpos($content, 'theplatform.com')!==false) {
+			$this->tag = 'msnbc';
+			$matches = array();
+			preg_match($this->msnbc_content_regex, $content, $matches);
+			if(isset($matches[1])) {
+				$this->url = 'http://player.theplatform.com/'.$matches[1];
+			}
 		}
 	}
 }
@@ -301,6 +317,8 @@ function inbed($atts=null, $content, $tag) {
 }
 
 add_shortcode('inbed', 'inbed');
+// add_shortcode('iframe', 'inbed');
+add_shortcode('msnbc', 'inbed');
 add_shortcode('ustream', 'inbed');
 add_shortcode('image', 'inbed');
 add_shortcode('video', 'inbed');
