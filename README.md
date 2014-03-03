@@ -70,7 +70,6 @@ Go to your Wufoo form manager (wufoo.com), then to Code -> Embed under the form 
 * username (string) required
 * formhash or id (string) required
 * autoresize (string) on or off. defaults to off
-* height (string) how high? defaults to 400
 * header (string) show or hide. defaults to hide.
 * ssl (string)  on or off. defaults to on.
 * iframe (string) on or off. defaults to off. javascript embed is used instead.

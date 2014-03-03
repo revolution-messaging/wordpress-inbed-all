@@ -26,6 +26,8 @@ class Inbed {
 	
 	private $twitter_url_regex = '/href\=\"https\:\/\/twitter.com([\-\_\/0-9a-zA-Z]{5,})/';
 	
+	private $instagram_regex = '/instagram.com\/p\/([\-\_0-9a-zA-Z]{5,})/';
+	
 	public function embed($atts, $content, $tag) {
 		/* reset */
 		$this->tag = null;
@@ -78,6 +80,12 @@ class Inbed {
 					break;
 				case 'youtube':
 					return '<div class="video-container"><iframe width="100%" height="100%" src="//www.youtube.com/embed/'.$this->id.'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+					break;
+				case 'ustream':
+					return '<div class="video-container"><iframe width="100%" height="100%" src="http://www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
+					break;
+				case 'instagram':
+					return '<iframe src="//instagram.com/p/'.$this->id.'/embed/" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>';
 					break;
 				case 'vine':
 					$vine_url = 'https://vine.co/v/'.$this->id.'/embed'.'/';
@@ -132,17 +140,13 @@ class Inbed {
 						$sc_url .= '&amp;download=false';
 					return '<div class="audio-container"><iframe width="100%" height="450" scrolling="no" frameborder="no" src="'.$sc_url.'"></iframe></div>';
 					break;
-				case: 'wufoo':
-					if(!isset($username)
+				case 'wufoo':
+					if(!isset($username))
 						return 'You need to provide your username for Wufoo.';
 					if(!isset($formhash) || !isset($id))
 						return 'You need to provide your formhash or form ID for Wufoo.';
-					if(isset($height) && is_int($height))
-						$height = $height;
-					else
-						$height = '400';
 					if(isset($autoresize) && $autoresize=='off')
-						$autoresize = 'false'
+						$autoresize = 'false';
 					else
 						$autoresize = 'true';
 					if(isset($header) && $header=='show')
@@ -158,7 +162,7 @@ class Inbed {
 					else
 						$scrolling = 'no';
 					if(isset($iframe)) {
-						return '<div class="wufoo-container"><iframe height="'.$height.'" allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;border:none"  src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
+						return '<div class="wufoo-container"><iframe height="100%" allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;border:none"  src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
 					} else {
 						return '<div class="wufoo-container"><div id="wufoo-'.$this->id.'">
 						Fill out my <a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'">online form</a>.
@@ -170,7 +174,7 @@ class Inbed {
 						\'autoResize\':'.$autoresize.',
 						\'height\':\''.$height.'\',
 						\'async\':true,
-						\'host':'wufoo.com\',
+						\'host\':\'wufoo.com\',
 						\'header\':\''.$header.'\',
 						\'ssl\':'.$ssl.'};
 						s.src = (\'https:\' == d.location.protocol ? \'https://\' : \'http://\') + \'wufoo.com/scripts/embed/form.js\';
@@ -224,6 +228,8 @@ class Inbed {
 			$this->tag = 'youtube';
 		if(strpos($url, 'vimeo')!==false)
 			$this->tag = 'vimeo';
+		if(strpos($url, 'instagram.com')!==false)
+			$this->tag = 'instagram';
 		if(strpos($url, 'soundcloud.com')!==false)
 			$this->tag = 'soundcloud';
 		if(strpos($url, 'vine.co')!==false)
@@ -253,9 +259,13 @@ class Inbed {
 				if(isset($matches[1]))
 					$this->id = $matches[1];
 				break;
-			case 'twitter':
-				break;
 			case 'instagram':
+				$matches = array();
+				preg_match($this->instagram_regex, $url, $matches);
+				if(isset($matches[1]))
+					$this->id = $matches[1];
+				break;
+			case 'twitter':
 				break;
 			case 'gist':
 				$this->url = str_replace('.js', '', $url);
@@ -291,9 +301,12 @@ function inbed($atts=null, $content, $tag) {
 }
 
 add_shortcode('inbed', 'inbed');
+add_shortcode('ustream', 'inbed');
+add_shortcode('image', 'inbed');
 add_shortcode('video', 'inbed');
 add_shortcode('vimeo', 'inbed');
 add_shortcode('youtube', 'inbed');
+add_shortcode('instagram', 'inbed');
 add_shortcode('soundcloud', 'inbed');
 add_shortcode('vine', 'inbed');
 add_shortcode('wufoo', 'inbed');
