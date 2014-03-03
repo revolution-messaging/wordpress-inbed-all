@@ -97,11 +97,11 @@ class Inbed {
 						if(!isset($title)) {
 							$title = 'Twitter Timeline';
 						}
-						return '<a class="twitter-timeline" data-dnt="true" href="'.$this->url.'" data-widget-id="'.$this->id.'">'.$title.'</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
+						return '<div class="story-container"><a class="twitter-timeline" data-dnt="true" href="'.$this->url.'" data-widget-id="'.$this->id.'">'.$title.'</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div>';
 					}
 					break;
 				case 'storify':
-					return '<div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height=750 frameborder=no allowtransparency=true></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div>';
+					return '<div class="story-container"><div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height=750 frameborder=no allowtransparency=true></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
 					break;
 				case 'vimeo':
 					return '<div class="video-container"><iframe width="100%" height="100%" src="//player.vimeo.com/video/'.$this->id.'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
@@ -113,7 +113,7 @@ class Inbed {
 					return '<div class="video-container"><iframe width="100%" height="100%" src="http://www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
 					break;
 				case 'instagram':
-					return '<iframe src="//instagram.com/p/'.$this->id.'/embed/" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>';
+					return '<div class="image-container"><iframe src="//instagram.com/p/'.$this->id.'/embed/" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>';
 					break;
 				case 'vine':
 					$vine_url = 'https://vine.co/v/'.$this->id.'/embed'.'/';
@@ -190,9 +190,9 @@ class Inbed {
 					else
 						$scrolling = 'no';
 					if(isset($iframe)) {
-						return '<div class="wufoo-container"><iframe height="100%" allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;border:none"  src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
+						return '<div class="form-container"><iframe height="100%" allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;border:none"  src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
 					} else {
-						return '<div class="wufoo-container"><div id="wufoo-'.$this->id.'">
+						return '<div class="form-container"><div id="wufoo-'.$this->id.'">
 						Fill out my <a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'">online form</a>.
 						</div>
 						<script type="text/javascript">var '.$this->id.';(function(d, t) {
@@ -223,10 +223,10 @@ class Inbed {
 				case 'audio':
 					break;
 				case 'msnbc':
-					return '<iframe src="'.$this->url.'" height="100%" width="100%" scrolling="no" border="no" ></iframe>';
+					return '<div class="video-container"><iframe src="'.$this->url.'" height="100%" width="100%" scrolling="no" border="no" ></iframe></div>';
 					break;
 				case 'storify':
-					return '<div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height="100%" frameborder="no" allowtransparency="true"></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http://'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div>';
+					return '<div class="story-container"><div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height="100%" frameborder="no" allowtransparency="true"></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http://'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
 					break;
 				case 'twitter':
 					if(isset($conversation) && $conversation=='on')
@@ -237,12 +237,12 @@ class Inbed {
 						$cards = '';
 					else
 						$cards = ' data-conversation="none"';
-					return '<div class="twitter-container"><blockquote class="twitter-tweet" lang="en"'.$cards.$conversation.'>'.$this->content.'</blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div>';
+					return '<div class="story-container"><blockquote class="twitter-tweet" lang="en"'.$cards.$conversation.'>'.$this->content.'</blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div>';
 					break;
 				case 'image':
 					break;
 				case 'gist':
-					return '<div class="gist-container"><script src="'.$this->url.'.js"></script></div>';
+					return '<div class="code-container"><script src="'.$this->url.'.js"></script></div>';
 					break;
 				default:
 					return 'Sorry, but we couldn\'t figure out how to embed this tag.';
