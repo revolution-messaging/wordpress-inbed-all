@@ -254,7 +254,7 @@ class Inbed {
 		}
 	}
 	
-	private function setURL($url, $settings) {
+	private function setURL($url, $settings=array()) {
 		if(strpos($url, 'youtube')!==false || strpos($url, 'youtu.be')!==false)
 			$this->tag = 'youtube';
 		else if(strpos($url, 'twitter.com')!==false && strpos($url, 'timelines')!==false)
@@ -311,7 +311,7 @@ class Inbed {
 				break;
 			case 'youtube':
 				$matches = array();
-				preg_match($this->vine_regex, $url, $matches);
+				preg_match($this->youtube_regex, $url, $matches);
 				if(isset($matches[1]))
 					$this->id = $matches[1];
 				break;
