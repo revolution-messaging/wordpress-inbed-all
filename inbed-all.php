@@ -101,19 +101,19 @@ class Inbed {
 					}
 					break;
 				case 'storify':
-					return '<div class="story-container"><div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height=750 frameborder=no allowtransparency=true></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
+					return '<div class="story-container"><div class="storify"><iframe src="'.$this->url.'/embed" height=750 frameborder=no allowtransparency=true></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
 					break;
 				case 'vimeo':
-					return '<div class="video-container"><iframe width="100%" height="100%" src="//player.vimeo.com/video/'.$this->id.'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+					return '<div class="video-container"><iframe src="//player.vimeo.com/video/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
 					break;
 				case 'youtube':
-					return '<div class="video-container"><iframe width="100%" height="100%" src="//www.youtube.com/embed/'.$this->id.'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+					return '<div class="video-container"><iframe src="//www.youtube.com/embed/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
 					break;
 				case 'ustream':
-					return '<div class="video-container"><iframe width="100%" height="100%" src="http://www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
+					return '<div class="video-container"><iframe src="//www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
 					break;
 				case 'instagram':
-					return '<div class="image-container"><iframe src="//instagram.com/p/'.$this->id.'/embed/" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>';
+					return '<div class="image-container"><iframe src="//instagram.com/p/'.$this->id.'/embed/" frameborder="0" scrolling="no" allowtransparency="true" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
 					break;
 				case 'vine':
 					$vine_url = 'https://vine.co/v/'.$this->id.'/embed'.'/';
@@ -125,10 +125,7 @@ class Inbed {
 					if(isset($audio) && $audio=='on') {
 						$vine_url .= '?audio=1';
 					}
-					return '<div class="video-container"><iframe width="100%" height="100%" class="vine-embed" src="'.$vine_url.'" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script></div>';
-					break;
-				case 'instagram':
-					return '<div class="image-container"><iframe width="100%" height="100%" src="//instagram.com/p/'.$matches[2].'/embed/" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>';
+					return '<div class="video-container"><iframe class="vine-embed" src="'.$vine_url.'" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8" webkitallowfullscreen mozallowfullscreen allowfullscreen></script></div>';
 					break;
 				case 'soundcloud':
 					$sc_url = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'.$this->id.'&amp;';
@@ -166,7 +163,7 @@ class Inbed {
 						$sc_url .= '&amp;download=true';
 					else
 						$sc_url .= '&amp;download=false';
-					return '<div class="audio-container"><iframe width="100%" height="450" scrolling="no" frameborder="no" src="'.$sc_url.'"></iframe></div>';
+					return '<div class="audio-container"><iframe scrolling="no" frameborder="no" src="'.$sc_url.'"></iframe></div>';
 					break;
 				case 'wufoo':
 					if(!isset($username))
@@ -190,7 +187,7 @@ class Inbed {
 					else
 						$scrolling = 'no';
 					if(isset($iframe)) {
-						return '<div class="form-container"><iframe height="100%" allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;border:none"  src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
+						return '<div class="form-container"><iframe allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;border:none"  src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
 					} else {
 						return '<div class="form-container"><div id="wufoo-'.$this->id.'">
 						Fill out my <a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'">online form</a>.
