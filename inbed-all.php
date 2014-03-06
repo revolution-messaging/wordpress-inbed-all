@@ -286,6 +286,7 @@ class Inbed {
 				preg_match($this->flickr_url_regex, $url, $matches);
 				if(isset($matches[1]))
 					$this->url = '/photos/'.$matches[1];
+				if(strpos($this->url, '/show')===false) { $this->url .= '/show'; }
 				$matches = array();
 				preg_match($this->flickr_setid_regex, $this->url, $matches);
 				if(isset($matches[1]))
