@@ -80,6 +80,17 @@ Embed your saved twitter widget and a timeline.
 
     [storify url="http://storify.com/TheClimateDesk/obama-s-climate-plan"]
 
+#### Flickr
+
+##### Set
+
+    [flickr url="http://www.flickr.com/photos/walker_hamilton/sets/72157635983149564/"]
+
+##### Options
+
+* width (int)
+* height (int)
+
 #### Wufoo
 
 Go to your Wufoo form manager (wufoo.com), then to Code -> Embed under the form you'd like to embed and grab the "Wordpress Shortcode" tag.

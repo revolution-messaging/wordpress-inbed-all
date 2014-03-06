@@ -16,7 +16,7 @@ class Inbed {
 	
 	protected $url = null;
 	
-	private $youtube_regex = '/(youtu.be\/|v\/|u\/\w\/|embed\/|\?v=|\&v=)([a-zA-Z0-9_-]{11})/';
+	private $youtube_regex = '/(youtu.be\/|v\/|u\/\w\/|embed\/|\?v=|\&v=)([a-zA-Z0-9\_\-]{11})/';
 	
 	private $vimeo_regex = '/vimeo.com\/([0-9]{1,})/';
 	
@@ -25,6 +25,10 @@ class Inbed {
 	private $vine_regex = '/vine.co\/v\/([a-zA-Z0-9]{11})/';
 	
 	private $msnbc_content_regex = '/http:\/\/player.theplatform.com\/([a-zA-Z0-9=\/\?\_\-]{1,})\'/';
+	
+	private $flickr_url_regex = '/\/photos\/([a-zA-Z0-9\-\_\/]{7,})/';
+	
+	private $flickr_setid_regex = '/\/sets\/([0-9]{5,})/';
 	
 	private $twitter_content_regex = '/<blockquote[0-9a-zA-Z\-"\ \=]*>(.*)<\/blockquote>/';
 	
@@ -88,6 +92,11 @@ class Inbed {
 		
 		if($this->id && $this->tag) {
 			switch($this->tag) {
+				case 'flickr':
+					if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
+					if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
+					return '<div id="image-container"><object'.$width.$height.'><param name="flashvars" value="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="></param><param name="movie" value="http://www.flickr.com/apps/slideshow/show.swf?v=140556"></param><param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/slideshow/show.swf?v=140556" allowFullScreen="true" flashvars="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="'.$width.$height.'></embed></object>';
+					break;
 				case 'twitter-timeline':
 					if(!isset($this->id)) {
 						return 'You need to provide the id or the settings url of the widget you\'ve configured: <code>[twitter-timeline url="https://twitter.com/TwitterMusic/timelines/393773266801659904" settings="https://twitter.com/settings/widgets/440598623684808704/edit"]</code>';
@@ -99,9 +108,6 @@ class Inbed {
 						}
 						return '<div class="story-container"><a class="twitter-timeline" data-dnt="true" href="'.$this->url.'" data-widget-id="'.$this->id.'">'.$title.'</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div>';
 					}
-					break;
-				case 'storify':
-					return '<div class="story-container"><div class="storify"><iframe src="'.$this->url.'/embed" height=750 frameborder=no allowtransparency=true></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
 					break;
 				case 'vimeo':
 					return '<div class="video-container"><iframe src="//player.vimeo.com/video/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
@@ -187,7 +193,7 @@ class Inbed {
 					else
 						$scrolling = 'no';
 					if(isset($iframe)) {
-						return '<div class="form-container"><iframe allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;border:none"  src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
+						return '<div class="form-container"><iframe allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
 					} else {
 						return '<div class="form-container"><div id="wufoo-'.$this->id.'">
 						Fill out my <a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'">online form</a>.
@@ -219,12 +225,11 @@ class Inbed {
 					break;
 				case 'audio':
 					break;
-				case 'msnbc':
-					return '<div class="video-container"><iframe src="'.$this->url.'" height="100%" width="100%" scrolling="no" border="no" ></iframe></div>';
-					break;
 				case 'storify':
-					return '<div class="story-container"><div class="storify"><iframe src="'.$this->url.'/embed" width="100%" height="100%" frameborder="no" allowtransparency="true"></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http://'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
+					return '<div class="story-container"><div class="storify"><iframe src="'.$this->url.'/embed" frameborder="no" allowtransparency="true"></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
 					break;
+				case 'msnbc':
+					return '<div class="video-container"><iframe src="'.$this->url.'" scrolling="no" border="no" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
 				case 'twitter':
 					if(isset($conversation) && $conversation=='on')
 						$conversation = '';
@@ -276,6 +281,16 @@ class Inbed {
 				$track = json_decode($client->get('resolve', array('url' => $url)));
 				$this->id = $track->id;
 				break;
+			case 'flickr':
+				$matches = array();
+				preg_match($this->flickr_url_regex, $url, $matches);
+				if(isset($matches[1]))
+					$this->url = '/photos/'.$matches[1];
+				$matches = array();
+				preg_match($this->flickr_setid_regex, $this->url, $matches);
+				if(isset($matches[1]))
+					$this->id = $matches[1];
+				break;
 			case 'twitter-timeline':
 				$matches = array();
 				preg_match($this->twitter_timeline_regex, $url, $matches);
@@ -300,20 +315,20 @@ class Inbed {
 				if(isset($matches[1]))
 					$this->url = '//storify.com/'.$matches[1];
 				break;
-			case 'iframe':
-				$this->url = $url;
-				break;
 			case 'vine':
 				$matches = array();
 				preg_match($this->vine_regex, $url, $matches);
 				if(isset($matches[1]))
 					$this->id = $matches[1];
 				break;
+			case 'flickr-flash':
+				
+				break;
 			case 'youtube':
 				$matches = array();
 				preg_match($this->youtube_regex, $url, $matches);
-				if(isset($matches[1]))
-					$this->id = $matches[1];
+				if(isset($matches[2]))
+					$this->id = $matches[2];
 				break;
 			case 'instagram':
 				$matches = array();
@@ -364,6 +379,8 @@ function inbed($atts=null, $content, $tag) {
 }
 
 add_shortcode('inbed', 'inbed');
+add_shortcode('storify', 'inbed');
+add_shortcode('flickr', 'inbed');
 add_shortcode('msnbc', 'inbed');
 add_shortcode('ustream', 'inbed');
 add_shortcode('image', 'inbed');
