@@ -63,7 +63,7 @@ All options on:
 
 The best way I could figure here was to allow you to slap the embed code between an open/close shortcode tag and then I grab what's necessary.
 
-    [twitter conversation="off" cards="off"]<blockquote class="twitter-tweet" lang="en"><p>Today&#39;s WOD: 12 pages on historic preservation tax credits…. 3, 2, 1, GO!</p>&mdash; Kyle Juvers (@kjuvers) <a href="https://twitter.com/kjuvers/statuses/440175998332440576">March 2, 2014</a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>[/twitter]
+    [twitter conversation="off" cards="off"]<blockquote class="twitter-tweet" lang="en"><p>Looks like <a href="https://twitter.com/theroyale">@theroyale</a> has <a href="https://twitter.com/PerennialBeer">@perennialbeer</a> <a href="https://twitter.com/sumpcoffee">@sumpcoffee</a> Stout on tap. <a href="https://twitter.com/search?q=%23STL&amp;src=hash">#STL</a> <a href="https://twitter.com/search?q=%23Craftbeer&amp;src=hash">#Craftbeer</a></p>&mdash; STL Hops (@stlhops) <a href="https://twitter.com/stlhops/statuses/437704557938761728">February 23, 2014</a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>[/twitter]
 
 ###### Options
 
