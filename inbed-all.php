@@ -3,72 +3,74 @@
 Plugin Name: Inbed All
 Plugin URI: http://github.com/walker/inbed-all
 Description: Embed everything
-Version: 1.0.0
+Version: 1.0.1
 Author: Walker Hamilton
 Author URI: http://walkerhamilton.com/
 */
 
 class Inbed {
-	
+
 	protected $tag = null;
-	
+
 	protected $id = null;
-	
+
 	protected $url = null;
-	
+
 	private $youtube_regex = '/(youtu.be\/|v\/|u\/\w\/|embed\/|\?v=|\&v=)([a-zA-Z0-9\_\-]{11})/';
-	
+
 	private $vimeo_regex = '/vimeo.com\/([0-9]{1,})/';
-	
+
 	private $storify_regex = '/storify.com\/([\/\-\_a-zA-Z0-9]{1,})/';
-	
+
 	private $vine_regex = '/vine.co\/v\/([a-zA-Z0-9]{11})/';
-	
+
 	private $msnbc_content_regex = '/http:\/\/player.theplatform.com\/([a-zA-Z0-9=\/\?\_\-]{1,})\'/';
-	
+
 	private $flickr_url_regex = '/\/photos\/([a-zA-Z0-9\-\_\/]{7,})/';
-	
+
 	private $flickr_setid_regex = '/\/sets\/([0-9]{5,})/';
-	
+
 	private $twitter_content_regex = '/<blockquote[0-9a-zA-Z\-"\ \=]*>(.*)<\/blockquote>/';
-	
+
 	private $twitter_url_regex = '/href\=\"https\:\/\/twitter.com([\-\_\/0-9a-zA-Z]{5,})/';
-	
+
 	private $twitter_timeline_regex = '/twitter.com\/([a-zA-Z0-9\/]{3,})/';
-	
+
 	private $twitter_timeline_widget_regex = '/widgets\/([0-9]{3,})/';
-	
+
 	private $instagram_regex = '/instagram.com\/p\/([\-\_0-9a-zA-Z]{5,})/';
-	
+
+	private $ustream_regex = '/embed\/(schannel)?\/?([0-9]{1,})/';
+
 	public function embed($atts, $content, $tag) {
 		/* reset */
 		$this->tag = null;
 		$this->id = null;
 		$this->url = null;
 		/* end reset */
-		
+
 		if($atts)
 			extract( $atts );
-		
+
 		if($content) {
 			$this->setContent($content);
 		}
-		
+
 		if(isset($tag)) {
 			$this->tag = $tag;
 		}
-		
+
 		if(isset($id) && (strpos($id, 'http')!==false || strlen($id)>20)) {
 			$url = (string)$id;
 			unset($id);
 		}
-		
+
 		if(isset($formhash)) {
 			$this->id = $formhash;
 		} else if(isset($id)) {
 			$this->id = $id;
 		}
-		
+
 		if(isset($url)) {
 			if($this->tag=='soundcloud' && !defined('SOUNDCLOUD_CLIENT_ID')) {
 				return 'You must define soundcloud client id in your functions.php or wp-config.php file: <code>define(\'SOUNDCLOUD_CLIENT_ID\', \'put your soundcloud application client ID here\');</code>';
@@ -83,15 +85,20 @@ class Inbed {
 				$this->setURL($url);
 			}
 		}
-		
+
 		if(($tag == 'video' || $tag=='image') && (!isset($url) || empty($url))) {
 			return 'You must provide a URL with the video tag: <code>[video url="https://www.youtube.com/watch?v=99CRJR6IL8c"]</code>';
 		} else if($tag=='image' && (!isset($url) || empty($url))) {
 			return 'You must provide a URL with the image tag: <code>[image url="http://25.media.tumblr.com/51a0d1b6d56036dbd7b3aa228594961a/tumblr_mw8h7nCbr01t1x93po1_500.jpg"]</code>';
 		}
-		
+
 		if($this->id && $this->tag) {
 			switch($this->tag) {
+				case 'ustream':
+					if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
+					if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
+					return '<div id="video-container"><iframe'.$width.$height.' src="//www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
+					break;
 				case 'flickr':
 					if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
 					if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
@@ -258,7 +265,7 @@ class Inbed {
 				return 'Sorry, but we couldn\'t figure out how to embed anything using that shortcode.';
 		}
 	}
-	
+
 	private function setURL($url, $settings=array()) {
 		if(strpos($url, 'youtube')!==false || strpos($url, 'youtu.be')!==false)
 			$this->tag = 'youtube';
@@ -310,6 +317,15 @@ class Inbed {
 				if(isset($matches[1]))
 					$this->id = $matches[1];
 				break;
+			case 'ustream':
+				$matches = array();
+				preg_match($this->ustream_regex, $url, $matches);
+				if(isset($matches[1]))
+					if(count($matches)>2)
+						$this->id = $matches[1].'/'.$matches[2];
+					else
+						$this->id = str_replace('/', '', $matches[1]);
+				break;
 			case 'storify':
 				$matches = array();
 				preg_match($this->storify_regex, $url, $matches);
@@ -323,7 +339,7 @@ class Inbed {
 					$this->id = $matches[1];
 				break;
 			case 'flickr-flash':
-				
+
 				break;
 			case 'youtube':
 				$matches = array();
@@ -346,7 +362,7 @@ class Inbed {
 				break;
 		}
 	}
-	
+
 	private function setContent($content) {
 		$content = str_replace(array("\r\n", "\n", "\r"), '', $content);
 		if(strpos($content, 'twitter.com')!==false) {
