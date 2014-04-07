@@ -19,6 +19,12 @@ A Wordpress plugin that allows you to embed stuff with shortcodes. The goal is t
 
     [youtube url="http://youtu.be/AGrAe9jHhx4"]
 
+#### Ustream
+
+    [ustream url="http://www.ustream.tv/embed/12703622"]
+    
+    [ustream url="https://www.ustream.tv/embed/schannel/960"]
+
 #### Vine
 
     [vine id="hPXTA6l9AqQ"]
