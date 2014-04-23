@@ -97,6 +97,11 @@ Embed your saved twitter widget and a timeline.
 * width (int)
 * height (int)
 
+
+#### Kimbia
+
+    [kimbia channel="2014glasaintlouis/advembed" profile="trailnet"]
+
 #### Wufoo
 
 Go to your Wufoo form manager (wufoo.com), then to Code -> Embed under the form you'd like to embed and grab the "Wordpress Shortcode" tag.

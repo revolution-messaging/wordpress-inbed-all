@@ -3,7 +3,7 @@
 Plugin Name: Inbed All
 Plugin URI: http://github.com/walker/inbed-all
 Description: Embed everything
-Version: 1.0.1
+Version: 1.0.2
 Author: Walker Hamilton
 Author URI: http://walkerhamilton.com/
 */
@@ -60,6 +60,10 @@ class Inbed {
             $this->tag = $tag;
         }
 
+        if($this->tag=='kimbia' && isset($channel)) {
+            $this->id = $channel;
+        }
+
         if(isset($id) && (strpos($id, 'http')!==false || strlen($id)>20)) {
             $url = (string)$id;
             unset($id);
@@ -97,7 +101,16 @@ class Inbed {
                 case 'ustream':
                     if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
                     if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
-                    return '<div id="video-container"><iframe'.$width.$height.' src="//www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
+                    return '<div id="video-container"><iframe'.$width.$height.' src="//www.ustream.tv/embed'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
+                    break;
+                case 'kimbia':
+                    $kimbia_vars = array();
+                    if(isset($channel)){$kimbia_vars[] = 'channel='.$channel;}
+                    if(isset($profile)){$kimbia_vars[] = 'messagingProfile='.$profile;}
+                    if(!empty($kimbia_vars)) {
+                        $kimbia_get = '?'.implode('&', $kimbia_vars);
+                    } else {$kimbia_get = '';}
+                    return '<div id="form-container"><script src="https://widgets.kimbia.com/widgets/form.js'.$kimbia_get.'"></script></div>';
                     break;
                 case 'flickr':
                     if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
@@ -321,10 +334,10 @@ class Inbed {
                 $matches = array();
                 preg_match($this->ustream_regex, $url, $matches);
                 if(isset($matches[1]))
-                    if(count($matches)>2)
-                        $this->id = $matches[1].'/'.$matches[2];
-                    else
-                        $this->id = str_replace('/', '', $matches[1]);
+                        if($matches[1]!='')
+                            $this->id = '/'.$matches[1].'/'.$matches[2];
+                        else
+                            $this->id = '/'.$matches[2];
                 break;
             case 'storify':
                 $matches = array();
@@ -396,6 +409,7 @@ function inbed($atts=null, $content, $tag) {
 }
 
 add_shortcode('inbed', 'inbed');
+add_shortcode('kimbia', 'inbed');
 add_shortcode('storify', 'inbed');
 add_shortcode('flickr', 'inbed');
 add_shortcode('msnbc', 'inbed');
