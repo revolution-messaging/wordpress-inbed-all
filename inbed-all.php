@@ -3,7 +3,7 @@
 Plugin Name: Inbed All
 Plugin URI: http://github.com/walker/inbed-all
 Description: Embed everything
-Version: 1.0.2
+Version: 1.0.1
 Author: Walker Hamilton
 Author URI: http://walkerhamilton.com/
 */
@@ -101,7 +101,7 @@ class Inbed {
                 case 'ustream':
                     if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
                     if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
-                    return '<div id="video-container"><iframe'.$width.$height.' src="//www.ustream.tv/embed'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
+                    return '<div class="video-container"><iframe'.$width.$height.' src="//www.ustream.tv/embed'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
                     break;
                 case 'kimbia':
                     $kimbia_vars = array();
@@ -110,12 +110,12 @@ class Inbed {
                     if(!empty($kimbia_vars)) {
                         $kimbia_get = '?'.implode('&', $kimbia_vars);
                     } else {$kimbia_get = '';}
-                    return '<div id="form-container"><script src="https://widgets.kimbia.com/widgets/form.js'.$kimbia_get.'"></script></div>';
+                    return '<div class="form-container"><script src="https://widgets.kimbia.com/widgets/form.js'.$kimbia_get.'"></script></div>';
                     break;
                 case 'flickr':
                     if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
                     if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
-                    return '<div id="image-container"><object'.$width.$height.'><param name="flashvars" value="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="></param><param name="movie" value="http://www.flickr.com/apps/slideshow/show.swf?v=140556"></param><param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/slideshow/show.swf?v=140556" allowFullScreen="true" flashvars="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="'.$width.$height.'></embed></object>';
+                    return '<div class="image-container"><object'.$width.$height.'><param name="flashvars" value="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="></param><param name="movie" value="http://www.flickr.com/apps/slideshow/show.swf?v=140556"></param><param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/slideshow/show.swf?v=140556" allowFullScreen="true" flashvars="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="'.$width.$height.'></embed></object>';
                     break;
                 case 'twitter-timeline':
                     if(!isset($this->id)) {
