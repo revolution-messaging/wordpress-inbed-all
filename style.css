@@ -1,0 +1,7 @@
+.inbed{position:relative;padding-top:30px;height:0;overflow:hidden;}
+.inbed.inbed-video{padding-bottom:56.25%;}
+.inbed.inbed-image{padding-bottom:78.25%;}
+.inbed.inbed-audio{padding-bottom:18.25%;}
+.inbed iframe,
+.inbed object,
+.inbed embed{position:absolute;top:0;left:0;width:100%;height:100%;}
