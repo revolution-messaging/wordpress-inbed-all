@@ -3,7 +3,7 @@
 Plugin Name: Inbed All
 Plugin URI: http://github.com/walker/inbed-all
 Description: Embed everything
-Version: 1.0.1
+Version: 1.0.2
 Author: Walker Hamilton
 Author URI: http://walkerhamilton.com/
 */
@@ -98,6 +98,10 @@ class Inbed {
 
         if($this->id && $this->tag) {
             switch($this->tag) {
+                case 'paypal':
+                    if(!isset($button) && isset($value)) { $button = '<button name="submit" type="submit"><span>'.$value.'</span></button>'; } else { $button = '<input type="image" src="'.$button.'">'; }
+                    return '<div class="finbed inbed-form paypal"><form class="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="'.$this->id.'">'.$button.'<img border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"></form></div>';
+                    break;
                 case 'ustream':
                     if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
                     if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
@@ -409,6 +413,7 @@ function inbed($atts=null, $content, $tag) {
 }
 
 add_shortcode('inbed', 'inbed');
+add_shortcode('paypal', 'inbed');
 add_shortcode('kimbia', 'inbed');
 add_shortcode('storify', 'inbed');
 add_shortcode('flickr', 'inbed');
