@@ -101,7 +101,7 @@ class Inbed {
                 case 'ustream':
                     if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
                     if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
-                    return '<div class="video-container"><iframe'.$width.$height.' src="//www.ustream.tv/embed'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
+                    return '<div class="inbed inbed-video ustream"><iframe'.$width.$height.' src="//www.ustream.tv/embed'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe></div>';
                     break;
                 case 'kimbia':
                     $kimbia_vars = array();
@@ -110,12 +110,12 @@ class Inbed {
                     if(!empty($kimbia_vars)) {
                         $kimbia_get = '?'.implode('&', $kimbia_vars);
                     } else {$kimbia_get = '';}
-                    return '<div class="form-container"><script src="https://widgets.kimbia.com/widgets/form.js'.$kimbia_get.'"></script></div>';
+                    return '<div class="inbed inbed-form kimbia"><script src="https://widgets.kimbia.com/widgets/form.js'.$kimbia_get.'"></script></div>';
                     break;
                 case 'flickr':
                     if(isset($width)){$width = ' width="'.$width.'"';} else {$width="";}
                     if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
-                    return '<div class="image-container"><object'.$width.$height.'><param name="flashvars" value="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="></param><param name="movie" value="http://www.flickr.com/apps/slideshow/show.swf?v=140556"></param><param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/slideshow/show.swf?v=140556" allowFullScreen="true" flashvars="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="'.$width.$height.'></embed></object>';
+                    return '<div class="inbed inbed-image flickr"><object'.$width.$height.'><param name="flashvars" value="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="></param><param name="movie" value="http://www.flickr.com/apps/slideshow/show.swf?v=140556"></param><param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/slideshow/show.swf?v=140556" allowFullScreen="true" flashvars="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="'.$width.$height.'></embed></object>';
                     break;
                 case 'twitter-timeline':
                     if(!isset($this->id)) {
@@ -126,20 +126,20 @@ class Inbed {
                         if(!isset($title)) {
                             $title = 'Twitter Timeline';
                         }
-                        return '<div class="story-container"><a class="twitter-timeline" data-dnt="true" href="'.$this->url.'" data-widget-id="'.$this->id.'">'.$title.'</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div>';
+                        return '<div class="inbed inbed-story twitter-timeline"><a class="twitter-timeline" data-dnt="true" href="'.$this->url.'" data-widget-id="'.$this->id.'">'.$title.'</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div>';
                     }
                     break;
                 case 'vimeo':
-                    return '<div class="video-container"><iframe src="//player.vimeo.com/video/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    return '<div class="inbed inbed-video vimeo"><iframe src="//player.vimeo.com/video/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'youtube':
-                    return '<div class="video-container"><iframe src="//www.youtube.com/embed/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    return '<div class="inbed inbed-video youtube"><iframe src="//www.youtube.com/embed/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'ustream':
-                    return '<div class="video-container"><iframe src="//www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    return '<div class="inbed inbed-video ustream"><iframe src="//www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'instagram':
-                    return '<div class="image-container"><iframe src="//instagram.com/p/'.$this->id.'/embed/" frameborder="0" scrolling="no" allowtransparency="true" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    return '<div class="inbed inbed-image instagram"><iframe src="//instagram.com/p/'.$this->id.'/embed/" frameborder="0" scrolling="no" allowtransparency="true" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'vine':
                     $vine_url = 'https://vine.co/v/'.$this->id.'/embed'.'/';
@@ -151,7 +151,7 @@ class Inbed {
                     if(isset($audio) && $audio=='on') {
                         $vine_url .= '?audio=1';
                     }
-                    return '<div class="video-container"><iframe class="vine-embed" src="'.$vine_url.'" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8" webkitallowfullscreen mozallowfullscreen allowfullscreen></script></div>';
+                    return '<div class="inbed inbed-video vine"><iframe class="vine-embed" src="'.$vine_url.'" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8" webkitallowfullscreen mozallowfullscreen allowfullscreen></script></div>';
                     break;
                 case 'soundcloud':
                     $sc_url = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'.$this->id.'&amp;';
@@ -189,7 +189,7 @@ class Inbed {
                         $sc_url .= '&amp;download=true';
                     else
                         $sc_url .= '&amp;download=false';
-                    return '<div class="audio-container"><iframe scrolling="no" frameborder="no" src="'.$sc_url.'"></iframe></div>';
+                    return '<div class="inbed inbed-audio soundcloud"><iframe scrolling="no" frameborder="no" src="'.$sc_url.'"></iframe></div>';
                     break;
                 case 'wufoo':
                     if(!isset($username))
@@ -213,9 +213,9 @@ class Inbed {
                     else
                         $scrolling = 'no';
                     if(isset($iframe)) {
-                        return '<div class="form-container"><iframe allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
+                        return '<div class="inbed inbed-form wufoo"><iframe allowTransparency="true" frameborder="0" scrolling="'.$scrolling.'" src="https://'.$username.'.wufoo.com/embed/'.$this->id.'/"><a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'/">Fill out my Wufoo form!</a></iframe></div>';
                     } else {
-                        return '<div class="form-container"><div id="wufoo-'.$this->id.'">
+                        return '<div class="inbed inbed-form wufoo"><div id="wufoo-'.$this->id.'">
                         Fill out my <a href="https://'.$username.'.wufoo.com/forms/'.$this->id.'">online form</a>.
                         </div>
                         <script type="text/javascript">var '.$this->id.';(function(d, t) {
@@ -246,10 +246,10 @@ class Inbed {
                 case 'audio':
                     break;
                 case 'storify':
-                    return '<div class="story-container"><div class="storify"><iframe src="'.$this->url.'/embed" frameborder="no" allowtransparency="true"></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
+                    return '<div class="inbed inbed-story storify"><div class="storify"><iframe src="'.$this->url.'/embed" frameborder="no" allowtransparency="true"></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
                     break;
                 case 'msnbc':
-                    return '<div class="video-container"><iframe src="'.$this->url.'" scrolling="no" border="no" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    return '<div class="inbed inbed-video msnbc"><iframe src="'.$this->url.'" scrolling="no" border="no" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                 case 'twitter':
                     if(isset($conversation) && $conversation=='on')
                         $conversation = '';
@@ -259,12 +259,12 @@ class Inbed {
                         $cards = '';
                     else
                         $cards = ' data-conversation="none"';
-                    return '<div class="story-container"><blockquote class="twitter-tweet" lang="en"'.$cards.$conversation.'>'.$this->content.'</blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div>';
+                    return '<div class="inbed inbed-story twitter-conversation"><blockquote class="twitter-tweet" lang="en"'.$cards.$conversation.'>'.$this->content.'</blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div>';
                     break;
                 case 'image':
                     break;
                 case 'gist':
-                    return '<div class="code-container"><script src="'.$this->url.'.js"></script></div>';
+                    return '<div class="inbed inbed-code gist"><script src="'.$this->url.'.js"></script></div>';
                     break;
                 default:
                     return 'Sorry, but we couldn\'t figure out how to embed this tag.';
