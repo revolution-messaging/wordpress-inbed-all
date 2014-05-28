@@ -19,6 +19,10 @@ A Wordpress plugin that allows you to embed stuff with shortcodes. The goal is t
 
     [youtube url="http://youtu.be/AGrAe9jHhx4"]
 
+To turn on autoplay, add in the autoplay setting to the tag:
+
+    [youtube id="AGrAe9jHhx4" autoplay="true"]
+
 #### Ustream
 
     [ustream url="http://www.ustream.tv/embed/12703622"]
