@@ -3,7 +3,7 @@
 Plugin Name: Inbed All
 Plugin URI: http://github.com/walker/inbed-all
 Description: Embed everything
-Version: 1.0.2
+Version: 1.0.3
 Author: Walker Hamilton
 Author URI: http://walkerhamilton.com/
 */
