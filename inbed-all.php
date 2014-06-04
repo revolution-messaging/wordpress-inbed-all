@@ -134,7 +134,13 @@ class Inbed {
                     }
                     break;
                 case 'vimeo':
-                    return '<div class="inbed inbed-video vimeo"><iframe src="//player.vimeo.com/video/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    $get_arr = array();
+                    if(isset($loop))
+                        $get_arr[] = 'loop=1';
+                    if(isset($autoplay))
+                        $get_arr[] = 'autoplay=1';
+                    $get_str = (count($get_arr)>0) ? '?'.implode('&amp;', $get_arr) : '';
+                    return '<div class="inbed inbed-video vimeo"><iframe src="//player.vimeo.com/video/'.$this->id.$get_str.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'youtube':
                     $get_arr = array('modestbranding=1');
