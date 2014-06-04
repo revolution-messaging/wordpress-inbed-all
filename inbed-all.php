@@ -137,8 +137,15 @@ class Inbed {
                     return '<div class="inbed inbed-video vimeo"><iframe src="//player.vimeo.com/video/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'youtube':
-                    $autoplay_arg = (isset($autoplay)) ? '?autoplay=1' : '';
-                    return '<div class="inbed inbed-video youtube"><iframe src="//www.youtube.com/embed/'.$this->id.$autoplay_arg.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    $get_arr = array();
+                    if(isset($autoplay))
+                        $get_arr[] = 'autoplay=1';
+                    if(!isset($rel))
+                        $get_arr[] = 'rel=0';
+                    if(!isset($annotations))
+                        $get_arr[] = 'iv_load_policy=3';
+                    $get_str = (count($get_arr)>0) ? '?'.implode('&amp;', $get_arr) : '';
+                    return '<div class="inbed inbed-video youtube"><iframe src="//www.youtube.com/embed/'.$this->id.$get_str.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'ustream':
                     return '<div class="inbed inbed-video ustream"><iframe src="//www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
