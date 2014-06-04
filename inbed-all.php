@@ -135,8 +135,15 @@ class Inbed {
                     break;
                 case 'vimeo':
                     $get_arr = array();
+                    $get_arr[] = (isset($badge)) ? 'badge=1' : 'badge=0';
+                    if(isset($title))
+                        $get_arr[] = 'title=1';
+                    if(isset($portrait))
+                        $get_arr[] = 'portrait=1';
                     if(isset($loop))
                         $get_arr[] = 'loop=1';
+                    if(isset($player_id) && ctype_alnum($player_id))
+                        $get_arr[] = 'player_id='.$player_id;
                     if(isset($autoplay))
                         $get_arr[] = 'autoplay=1';
                     $get_str = (count($get_arr)>0) ? '?'.implode('&amp;', $get_arr) : '';
