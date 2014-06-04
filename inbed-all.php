@@ -137,13 +137,25 @@ class Inbed {
                     return '<div class="inbed inbed-video vimeo"><iframe src="//player.vimeo.com/video/'.$this->id.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'youtube':
-                    $get_arr = array();
+                    $get_arr = array('modestbranding=1');
+                    if(isset($autohide) && ($autohide==='0'||$autohide==='1'||$autohide==='2'||$autohide===0||$autohide===1||$autohide===2))
+                        $get_arr[] = 'autohide='.$autohide;
+                    if(isset($controls) && ($controls==='0'||$controls==='1'||$controls==='2'||$controls===0||$controls===1||$controls===2))
+                        $get_arr[] = 'controls='.$controls;
+                    if(isset($theme) && ($theme=='dark'||$theme=='light'))
+                        $get_arr[] = 'theme='.$theme;
+                    if(isset($cc))
+                        $get_arr[] = 'cc_load_policy=1';
+                    if(isset($loop))
+                        $get_arr[] = 'loop=1';
+                    $get_arr[] = (isset($showinfo)) ? 'showinfo=1': 'showinfo=0';
+                    if(isset($playsinline))
+                        $get_arr[] = 'playsinline=1';
                     if(isset($autoplay))
                         $get_arr[] = 'autoplay=1';
                     if(!isset($rel))
                         $get_arr[] = 'rel=0';
-                    if(!isset($annotations))
-                        $get_arr[] = 'iv_load_policy=3';
+                    $get_arr[] = (isset($annotations)) ? 'iv_load_policy=1' : 'iv_load_policy=3';
                     $get_str = (count($get_arr)>0) ? '?'.implode('&amp;', $get_arr) : '';
                     return '<div class="inbed inbed-video youtube"><iframe src="//www.youtube.com/embed/'.$this->id.$get_str.'" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
