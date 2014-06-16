@@ -27,6 +27,13 @@ To turn off automatically embedding at highquality, add in hq_off=true
 
     [youtube id="AGrAe9jHhx4" hq_off=true]
 
+To set embedding quality specifically, add in vq variable:
+
+    [youtube id="AGrAe9jHhx4" vq=large]
+
+Potential values are:
+
+    small, medium, large, 720
 
 
 #### Ustream

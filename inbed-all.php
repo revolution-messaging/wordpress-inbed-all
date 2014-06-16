@@ -156,8 +156,6 @@ class Inbed {
                         $get_arr[] = 'controls='.$controls;
                     if(isset($theme) && ($theme=='dark'||$theme=='light'))
                         $get_arr[] = 'theme='.$theme;
-                    if(!isset($hq_off))
-                        $get_arr[] = 'VQ=HD720';
                     if(isset($vq)) {
                         switch($vq) {
                             case 'small':
@@ -173,6 +171,8 @@ class Inbed {
                             default:
                                 $get_arr[] = 'VQ=HD720';
                         }
+                    } else if(!isset($hq_off))
+                        $get_arr[] = 'VQ=HD720';
                     }
                     if(isset($cc))
                         $get_arr[] = 'cc_load_policy=1';
