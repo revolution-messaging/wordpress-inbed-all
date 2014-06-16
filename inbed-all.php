@@ -138,8 +138,7 @@ class Inbed {
                     $get_arr[] = (isset($badge)) ? 'badge=1' : 'badge=0';
                     if(isset($title))
                         $get_arr[] = 'title=1';
-                    if(isset($portrait))
-                        $get_arr[] = 'portrait=1';
+                    $get_arr[] = (isset($portrait)) ? 'portrait=1' : 'portrait=0';
                     if(isset($loop))
                         $get_arr[] = 'loop=1';
                     if(isset($player_id) && ctype_alnum($player_id))
@@ -157,6 +156,24 @@ class Inbed {
                         $get_arr[] = 'controls='.$controls;
                     if(isset($theme) && ($theme=='dark'||$theme=='light'))
                         $get_arr[] = 'theme='.$theme;
+                    if(!isset($hq_off))
+                        $get_arr[] = 'VQ=HD720';
+                    if(isset($vq)) {
+                        switch($vq) {
+                            case 'small':
+                                $get_arr[] = 'VQ=small';
+                                break;
+                            case 'medium':
+                                $get_arr[] = 'VQ=medium';
+                                break;
+                            case 'large':
+                                $get_arr[] = 'VQ=large';
+                                break;
+                            case '720':
+                            default:
+                                $get_arr[] = 'VQ=HD720';
+                        }
+                    }
                     if(isset($cc))
                         $get_arr[] = 'cc_load_policy=1';
                     if(isset($loop))

@@ -23,6 +23,12 @@ To turn on autoplay, add in the autoplay setting to the tag:
 
     [youtube id="AGrAe9jHhx4" autoplay="true"]
 
+To turn off automatically embedding at highquality, add in hq_off=true
+
+    [youtube id="AGrAe9jHhx4" hq_off=true]
+
+
+
 #### Ustream
 
     [ustream url="http://www.ustream.tv/embed/12703622"]
