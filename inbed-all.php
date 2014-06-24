@@ -171,7 +171,7 @@ class Inbed {
                             default:
                                 $get_arr[] = 'VQ=HD720';
                         }
-                    } else if(!isset($hq_off))
+                    } else if(!isset($hq_off)) {
                         $get_arr[] = 'VQ=HD720';
                     }
                     if(isset($cc))
