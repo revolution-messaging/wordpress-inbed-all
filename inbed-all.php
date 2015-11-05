@@ -7,6 +7,51 @@ Version: 1.0.3
 Author: Walker Hamilton
 Author URI: http://walkerhamilton.com/
 */
+require_once(dirname(__FILE__).'/libraries/twitter.php');
+
+// Twitter OAuth Access Token
+function ia_twitter_oauth_access_token_field_html() {
+  $value = get_option('ia_twitter_oauth_access_token', '');
+  echo '<input type="text" id="ia_twitter_oauth_access_token" name="ia_twitter_oauth_access_token" value="'.$value.'" />';
+}
+function ia_twitter_oauth_access_token_field() {
+  register_setting('general', 'ia_twitter_oauth_access_token', 'esc_attr');
+  add_settings_field('ia_twitter_oauth_access_token', '<label for="ia_twitter_oauth_access_token">'.__('Twitter OAuth Access Token' , 'ia_twitter_oauth_access_token' ).'</label>' , 'ia_twitter_oauth_access_token_field_html', 'general');
+}
+// Twitter OAuth Access Token Secret
+function ia_twitter_oauth_access_token_secret_field_html() {
+  $value = get_option('ia_twitter_oauth_access_token_secret', '');
+  echo '<input type="text" id="ia_twitter_oauth_access_token_secret" name="ia_twitter_oauth_access_token_secret" value="'.$value.'" />';
+}
+function ia_twitter_oauth_access_token_secret_field() {
+  register_setting('general', 'ia_twitter_oauth_access_token_secret', 'esc_attr');
+  add_settings_field('ia_twitter_oauth_access_token_secret', '<label for="ia_twitter_oauth_access_token_secret">'.__('Twitter OAuth Access Token Secret' , 'ia_twitter_oauth_access_token_secret' ).'</label>' , 'ia_twitter_oauth_access_token_secret_field_html', 'general');
+}
+// Twitter Consumer Key
+function ia_twitter_consumer_key_field_html() {
+  $value = get_option('ia_twitter_consumer_key', '');
+  echo '<input type="text" id="ia_twitter_consumer_key" name="ia_twitter_consumer_key" value="'.$value.'" />';
+}
+function ia_twitter_consumer_key_field() {
+  register_setting('general', 'ia_twitter_consumer_key', 'esc_attr');
+  add_settings_field('ia_twitter_consumer_key', '<label for="ia_twitter_consumer_key">'.__('Twitter Consumer Key' , 'ia_twitter_consumer_key' ).'</label>' , 'ia_twitter_consumer_key_field_html', 'general');
+}
+// Twitter Consumer Secret
+function ia_twitter_consumer_secret_field_html() {
+  $value = get_option('ia_twitter_consumer_secret', '');
+  echo '<input type="text" id="ia_twitter_consumer_secret" name="ia_twitter_consumer_secret" value="'.$value.'" />';
+}
+function ia_twitter_consumer_secret_field() {
+  register_setting('general', 'ia_twitter_consumer_secret', 'esc_attr');
+  add_settings_field('ia_twitter_consumer_secret', '<label for="ia_twitter_consumer_secret">'.__('Twitter Consumer Secret' , 'ia_twitter_consumer_secret' ).'</label>' , 'ia_twitter_consumer_secret_field_html', 'general');
+}
+
+add_filter('admin_init', 'ia_twitter_oauth_access_token_field');
+add_filter('admin_init', 'ia_twitter_oauth_access_token_secret_field');
+add_filter('admin_init', 'ia_twitter_consumer_key_field');
+add_filter('admin_init', 'ia_twitter_consumer_secret_field');
+
+
 
 class Inbed {
 
@@ -30,7 +75,9 @@ class Inbed {
 
     private $flickr_setid_regex = '/\/sets\/([0-9]{5,})/';
 
-    private $twitter_content_regex = '/<blockquote[0-9a-zA-Z\-"\ \=]*>(.*)<\/blockquote>/';
+    private $twitter_content_regex = '/<blockquote([0-9a-zA-Z\-\"\'\ \=\”]{0,100})>(.*)<\/blockquote>/';
+
+    private $twitter_status_id_regex = '/https\:\/\/twitter\.com\/([a-zA-Z0-9]{2,20})\/status\/([0-9]{5,})/';
 
     private $twitter_url_regex = '/href\=\"https\:\/\/twitter.com([\-\_\/0-9a-zA-Z]{5,})/';
 
@@ -64,15 +111,23 @@ class Inbed {
             $this->id = $channel;
         }
 
+        if(isset($formhash)) {
+            $this->id = $formhash;
+        } else if(isset($id)) {
+            $this->id = $id;
+        }
+
         if(isset($id) && (strpos($id, 'http')!==false || strlen($id)>20)) {
             $url = (string)$id;
             unset($id);
         }
 
-        if(isset($formhash)) {
-            $this->id = $formhash;
-        } else if(isset($id)) {
-            $this->id = $id;
+        if($this->tag=='twitter' && isset($url)) {
+          $matches = array();
+          preg_match_all($this->twitter_status_id_regex, $url, $matches);
+          if(isset($matches[2][0])) {
+            $this->id = $matches[2][0];
+          }
         }
 
         if(isset($url)) {
@@ -121,6 +176,46 @@ class Inbed {
                     if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
                     return '<div class="inbed inbed-image flickr"><object'.$width.$height.'><param name="flashvars" value="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="></param><param name="movie" value="http://www.flickr.com/apps/slideshow/show.swf?v=140556"></param><param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/slideshow/show.swf?v=140556" allowFullScreen="true" flashvars="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="'.$width.$height.'></embed></object>';
                     break;
+                case 'twitter':
+                    if(isset($conversation) && $conversation=='on')
+                        $conversation = '';
+                    else
+                        $conversation = ' data-conversation="none"';
+                    if(isset($cards) && $cards=='off')
+                        $cards = ' hide_media="true"';
+                    else
+                        $cards = '';
+
+                    $settings = array(
+                      'oauth_access_token' => get_option('ia_twitter_oauth_access_token', ''),
+                      'oauth_access_token_secret' => get_option('ia_twitter_oauth_access_token_secret', ''),
+                      'consumer_key' => get_option('ia_twitter_consumer_key', ''),
+                      'consumer_secret' => get_option('ia_twitter_consumer_secret', '')
+                    );
+
+                    $url            = 'https://api.twitter.com/1.1/statuses/oembed.json';
+                    $getfield       = '?id='.$this->id;
+                    $request_method = 'GET';
+
+                    $twitter_instance = new Twitter_API_WordPress( $settings );
+
+                    $result = $twitter_instance
+                      ->set_get_field( $getfield )
+                    	->build_oauth( $url, $request_method )
+                    	->process_request();
+                    if(isset($result)) {
+                      try {
+                        $t_res = json_decode($result);
+                        if(isset($t_res->html)) {
+                            return str_replace('<blockquote class="twitter-tweet">', '<blockquote class="twitter-tweet"'.$cards.$conversation.'>', $t_res->html);
+                        } else {
+                          return 'Sorry, but we couldn\'t figure out how to embed this tag.';
+                        }
+                      } catch(Exception $e) {
+                        // Problem decoding.
+                        return 'Sorry, but we couldn\'t figure out how to embed this tag.';
+                      }
+                    }
                 case 'twitter-timeline':
                     if(!isset($this->id)) {
                         return 'You need to provide the id or the settings url of the widget you\'ve configured: <code>[twitter-timeline url="https://twitter.com/TwitterMusic/timelines/393773266801659904" settings="https://twitter.com/settings/widgets/440598623684808704/edit"]</code>';
@@ -320,6 +415,8 @@ class Inbed {
                 case 'gist':
                     return '<div class="inbed inbed-code gist"><script src="'.$this->url.'.js"></script></div>';
                     break;
+                case 'today':
+                    return '<div class="inbed inbed-video today"><iframe src="'.$this->url.'" scrolling="no" border="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                 default:
                     return 'Sorry, but we couldn\'t figure out how to embed this tag.';
             }
@@ -432,19 +529,7 @@ class Inbed {
 
     private function setContent($content) {
         $content = str_replace(array("\r\n", "\n", "\r"), '', $content);
-        if(strpos($content, 'twitter.com')!==false) {
-            $this->tag = 'twitter';
-            $matches = array();
-            preg_match($this->twitter_content_regex, $content, $matches);
-            if(isset($matches[1])) {
-                $this->content = $matches[1];
-                $matches = array();
-                preg_match($this->twitter_url_regex, $this->content, $matches);
-                if(isset($matches[1])) {
-                    $this->url = 'https://twitter.com'.$matches[1];
-                }
-            }
-        } else if(strpos($content, 'theplatform.com')!==false) {
+        if(strpos($content, 'theplatform.com')!==false) {
             $this->tag = 'msnbc';
             $matches = array();
             preg_match($this->msnbc_content_regex, $content, $matches);
@@ -467,6 +552,7 @@ add_shortcode('paypal', 'inbed');
 add_shortcode('kimbia', 'inbed');
 add_shortcode('storify', 'inbed');
 add_shortcode('flickr', 'inbed');
+add_shortcode('today', 'inbed');
 add_shortcode('msnbc', 'inbed');
 add_shortcode('ustream', 'inbed');
 add_shortcode('image', 'inbed');

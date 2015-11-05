@@ -23,23 +23,10 @@ To turn on autoplay, add in the autoplay setting to the tag:
 
     [youtube id="AGrAe9jHhx4" autoplay="true"]
 
-To turn off automatically embedding at highquality, add in hq_off=true
-
-    [youtube id="AGrAe9jHhx4" hq_off=true]
-
-To set embedding quality specifically, add in vq variable:
-
-    [youtube id="AGrAe9jHhx4" vq=large]
-
-Potential values are:
-
-    small, medium, large, 720
-
-
 #### Ustream
 
     [ustream url="http://www.ustream.tv/embed/12703622"]
-    
+
     [ustream url="https://www.ustream.tv/embed/schannel/960"]
 
 #### Vine
@@ -82,11 +69,11 @@ All options on:
 * playcount (string) On or Off, defaults to "off"
 * comments (string) On or Off, defaults to "off"
 
-#### Twitter
+#### Twitter - Embed Single Twitter
 
-The best way I could figure here was to allow you to slap the embed code between an open/close shortcode tag and then I grab what's necessary.
+You must set your OAuth information in the general settings section of the admin in order to use Twitter embeds.
 
-    [twitter conversation="off" cards="off"]<blockquote class="twitter-tweet" lang="en"><p>Looks like <a href="https://twitter.com/theroyale">@theroyale</a> has <a href="https://twitter.com/PerennialBeer">@perennialbeer</a> <a href="https://twitter.com/sumpcoffee">@sumpcoffee</a> Stout on tap. <a href="https://twitter.com/search?q=%23STL&amp;src=hash">#STL</a> <a href="https://twitter.com/search?q=%23Craftbeer&amp;src=hash">#Craftbeer</a></p>&mdash; STL Hops (@stlhops) <a href="https://twitter.com/stlhops/statuses/437704557938761728">February 23, 2014</a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>[/twitter]
+    [twitter conversation="off" cards="on" url="https://twitter.com/theroyale/status/662062528323674112"]
 
 ###### Options
 
