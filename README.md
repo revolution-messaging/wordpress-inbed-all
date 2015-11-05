@@ -77,7 +77,7 @@ You must set your OAuth information in the general settings section of the admin
 
 ###### Options
 
-* cards (string) On or Off, defaults to "off"
+* cards [now used for show/hide media] (string) On or Off, defaults to "on"
 * conversation (string) On or Off, defaults to "off"
 
 #### Twitter Timeline
