@@ -1,57 +1,12 @@
 <?php
 /*
 Plugin Name: Inbed All
-Plugin URI: http://github.com/walker/inbed-all
+Plugin URI: https://github.com/revolution-messaging
 Description: Embed everything
-Version: 1.0.3
-Author: Walker Hamilton
-Author URI: http://walkerhamilton.com/
+Version: 1.1
+Author: Walker Hamilton, recent update by Joe Pahl
+Author URI: https://revolutionmessaging.com/
 */
-require_once(dirname(__FILE__).'/libraries/twitter.php');
-
-// Twitter OAuth Access Token
-function ia_twitter_oauth_access_token_field_html() {
-  $value = get_option('ia_twitter_oauth_access_token', '');
-  echo '<input type="text" id="ia_twitter_oauth_access_token" name="ia_twitter_oauth_access_token" value="'.$value.'" />';
-}
-function ia_twitter_oauth_access_token_field() {
-  register_setting('general', 'ia_twitter_oauth_access_token', 'esc_attr');
-  add_settings_field('ia_twitter_oauth_access_token', '<label for="ia_twitter_oauth_access_token">'.__('Twitter OAuth Access Token' , 'ia_twitter_oauth_access_token' ).'</label>' , 'ia_twitter_oauth_access_token_field_html', 'general');
-}
-// Twitter OAuth Access Token Secret
-function ia_twitter_oauth_access_token_secret_field_html() {
-  $value = get_option('ia_twitter_oauth_access_token_secret', '');
-  echo '<input type="text" id="ia_twitter_oauth_access_token_secret" name="ia_twitter_oauth_access_token_secret" value="'.$value.'" />';
-}
-function ia_twitter_oauth_access_token_secret_field() {
-  register_setting('general', 'ia_twitter_oauth_access_token_secret', 'esc_attr');
-  add_settings_field('ia_twitter_oauth_access_token_secret', '<label for="ia_twitter_oauth_access_token_secret">'.__('Twitter OAuth Access Token Secret' , 'ia_twitter_oauth_access_token_secret' ).'</label>' , 'ia_twitter_oauth_access_token_secret_field_html', 'general');
-}
-// Twitter Consumer Key
-function ia_twitter_consumer_key_field_html() {
-  $value = get_option('ia_twitter_consumer_key', '');
-  echo '<input type="text" id="ia_twitter_consumer_key" name="ia_twitter_consumer_key" value="'.$value.'" />';
-}
-function ia_twitter_consumer_key_field() {
-  register_setting('general', 'ia_twitter_consumer_key', 'esc_attr');
-  add_settings_field('ia_twitter_consumer_key', '<label for="ia_twitter_consumer_key">'.__('Twitter Consumer Key' , 'ia_twitter_consumer_key' ).'</label>' , 'ia_twitter_consumer_key_field_html', 'general');
-}
-// Twitter Consumer Secret
-function ia_twitter_consumer_secret_field_html() {
-  $value = get_option('ia_twitter_consumer_secret', '');
-  echo '<input type="text" id="ia_twitter_consumer_secret" name="ia_twitter_consumer_secret" value="'.$value.'" />';
-}
-function ia_twitter_consumer_secret_field() {
-  register_setting('general', 'ia_twitter_consumer_secret', 'esc_attr');
-  add_settings_field('ia_twitter_consumer_secret', '<label for="ia_twitter_consumer_secret">'.__('Twitter Consumer Secret' , 'ia_twitter_consumer_secret' ).'</label>' , 'ia_twitter_consumer_secret_field_html', 'general');
-}
-
-add_filter('admin_init', 'ia_twitter_oauth_access_token_field');
-add_filter('admin_init', 'ia_twitter_oauth_access_token_secret_field');
-add_filter('admin_init', 'ia_twitter_consumer_key_field');
-add_filter('admin_init', 'ia_twitter_consumer_secret_field');
-
-
 
 class Inbed {
 
@@ -69,15 +24,13 @@ class Inbed {
 
     private $vine_regex = '/vine.co\/v\/([a-zA-Z0-9]{11})/';
 
-    private $msnbc_content_regex = '/http:\/\/player.theplatform.com\/([a-zA-Z0-9=\/\?\_\-]{1,})\'/';
+		//private $src_content_regex = '/src=\'([^"]*)\'/i'; // nbc, msnbc, today  /src="(.*?)"/i
 
     private $flickr_url_regex = '/\/photos\/([a-zA-Z0-9\-\_\/]{7,})/';
 
     private $flickr_setid_regex = '/\/sets\/([0-9]{5,})/';
 
-    private $twitter_content_regex = '/<blockquote([0-9a-zA-Z\-\"\'\ \=\”]{0,100})>(.*)<\/blockquote>/';
-
-    private $twitter_status_id_regex = '/https\:\/\/twitter\.com\/([a-zA-Z0-9]{2,20})\/status\/([0-9]{5,})/';
+    private $twitter_content_regex = '/<blockquote[0-9a-zA-Z\-"\ \=]*>(.*)<\/blockquote>/';
 
     private $twitter_url_regex = '/href\=\"https\:\/\/twitter.com([\-\_\/0-9a-zA-Z]{5,})/';
 
@@ -94,13 +47,15 @@ class Inbed {
         $this->tag = null;
         $this->id = null;
         $this->url = null;
+        $this->layout = null;
         /* end reset */
-
         if($atts)
             extract( $atts );
 
+				$this->layout = $layout;
+
         if($content) {
-            $this->setContent($content);
+            $this->setContent($content, $tag);
         }
 
         if(isset($tag)) {
@@ -111,26 +66,19 @@ class Inbed {
             $this->id = $channel;
         }
 
+        if(isset($id) && (strpos($id, 'http')!==false || strlen($id)>20)) {
+            $url = (string)$id;
+            unset($id);
+        }
+
         if(isset($formhash)) {
             $this->id = $formhash;
         } else if(isset($id)) {
             $this->id = $id;
         }
 
-        if(isset($id) && (strpos($id, 'http')!==false || strlen($id)>20)) {
-            $url = (string)$id;
-            unset($id);
-        }
-
-        if($this->tag=='twitter' && isset($url)) {
-          $matches = array();
-          preg_match_all($this->twitter_status_id_regex, $url, $matches);
-          if(isset($matches[2][0])) {
-            $this->id = $matches[2][0];
-          }
-        }
-
         if(isset($url)) {
+
             if($this->tag=='soundcloud' && !defined('SOUNDCLOUD_CLIENT_ID')) {
                 return 'You must define soundcloud client id in your functions.php or wp-config.php file: <code>define(\'SOUNDCLOUD_CLIENT_ID\', \'put your soundcloud application client ID here\');</code>';
             }
@@ -176,46 +124,6 @@ class Inbed {
                     if(isset($height)){$height = ' height="'.$height.'"';} else {$height="";}
                     return '<div class="inbed inbed-image flickr"><object'.$width.$height.'><param name="flashvars" value="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="></param><param name="movie" value="http://www.flickr.com/apps/slideshow/show.swf?v=140556"></param><param name="allowFullScreen" value="true"></param><embed type="application/x-shockwave-flash" src="http://www.flickr.com/apps/slideshow/show.swf?v=140556" allowFullScreen="true" flashvars="offsite=true&lang=en-us&page_show_url='.urlencode($this->url).'&set_id='.$this->id.'&jump_to="'.$width.$height.'></embed></object>';
                     break;
-                case 'twitter':
-                    if(isset($conversation) && $conversation=='on')
-                        $conversation = '';
-                    else
-                        $conversation = ' data-conversation="none"';
-                    if(isset($cards) && $cards=='off')
-                        $cards = ' hide_media="true"';
-                    else
-                        $cards = '';
-
-                    $settings = array(
-                      'oauth_access_token' => get_option('ia_twitter_oauth_access_token', ''),
-                      'oauth_access_token_secret' => get_option('ia_twitter_oauth_access_token_secret', ''),
-                      'consumer_key' => get_option('ia_twitter_consumer_key', ''),
-                      'consumer_secret' => get_option('ia_twitter_consumer_secret', '')
-                    );
-
-                    $url            = 'https://api.twitter.com/1.1/statuses/oembed.json';
-                    $getfield       = '?id='.$this->id;
-                    $request_method = 'GET';
-
-                    $twitter_instance = new Twitter_API_WordPress( $settings );
-
-                    $result = $twitter_instance
-                      ->set_get_field( $getfield )
-                    	->build_oauth( $url, $request_method )
-                    	->process_request();
-                    if(isset($result)) {
-                      try {
-                        $t_res = json_decode($result);
-                        if(isset($t_res->html)) {
-                            return str_replace('<blockquote class="twitter-tweet">', '<blockquote class="twitter-tweet"'.$cards.$conversation.'>', $t_res->html);
-                        } else {
-                          return 'Sorry, but we couldn\'t figure out how to embed this tag.';
-                        }
-                      } catch(Exception $e) {
-                        // Problem decoding.
-                        return 'Sorry, but we couldn\'t figure out how to embed this tag.';
-                      }
-                    }
                 case 'twitter-timeline':
                     if(!isset($this->id)) {
                         return 'You need to provide the id or the settings url of the widget you\'ve configured: <code>[twitter-timeline url="https://twitter.com/TwitterMusic/timelines/393773266801659904" settings="https://twitter.com/settings/widgets/440598623684808704/edit"]</code>';
@@ -389,6 +297,7 @@ class Inbed {
                     return 'Sorry, but we couldn\'t figure out how to embed this tag.';
             }
         } else if($this->url && $this->tag) {
+
             switch($this->tag) {
                 case 'video':
                     break;
@@ -398,25 +307,40 @@ class Inbed {
                     return '<div class="inbed inbed-story storify"><div class="storify"><iframe src="'.$this->url.'/embed" frameborder="no" allowtransparency="true"></iframe><script src="'.$this->url.'.js"></script><noscript>[<a href="http:'.$this->url.'" target="_blank">View story on Storify</a>]</noscript></div></div>';
                     break;
                 case 'msnbc':
-                    return '<div class="inbed inbed-video msnbc"><iframe src="'.$this->url.'" scrolling="no" border="no" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    return '<div class="inbed inbed-video msnbc"><iframe src="'.$this->url.'" scrolling="no" border="no"></iframe></div>';
+										break;
+                case 'nbcnews':
+                    return '<div class="inbed inbed-video nbcnews"><iframe src="http://www.nbcnews.com/widget/video-embed/'.$this->url.'" frameborder="0" allowfullscreen></iframe></div>';
+										break;
+                case 'today':
+                    return '<div class="inbed inbed-video today"><iframe src="'.$this->url.'" scrolling="no" border="no" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" autoplay="0"></iframe></div>';
+										break;
+
+								case 'fbvideo':
+                    return '<div class="inbed inbed-video fbvideo '. $this->layout .'"><iframe src="https://www.facebook.com/plugins/video.php?href=' . urlencode($this->url) . '" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe></div>';
+										break;
+
+                case 'nbc':
+                    return '<div class="inbed inbed-video nbc" itemprop="video" itemscope itemtype="http://schema.org/VideoObject"><iframe src="'.$this->url.'" frameBorder="0" seamless="seamless" allowFullScreen></iframe></div>';
+                    break;
                 case 'twitter':
                     if(isset($conversation) && $conversation=='on')
                         $conversation = '';
                     else
                         $conversation = ' data-conversation="none"';
+/*
                     if(isset($cards) && $cards=='on')
                         $cards = '';
                     else
                         $cards = ' data-conversation="none"';
-                    return '<div class="inbed inbed-story twitter-conversation"><blockquote class="twitter-tweet" lang="en"'.$cards.$conversation.'>'.$this->content.'</blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div>';
+*/
+                    return '<div class="inbed inbed-story twitter-conversation"><blockquote class="twitter-tweet" lang="en"'.$conversation.'>'.$this->content.'</blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div>';
                     break;
                 case 'image':
                     break;
                 case 'gist':
                     return '<div class="inbed inbed-code gist"><script src="'.$this->url.'.js"></script></div>';
                     break;
-                case 'today':
-                    return '<div class="inbed inbed-video today"><iframe src="'.$this->url.'" scrolling="no" border="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                 default:
                     return 'Sorry, but we couldn\'t figure out how to embed this tag.';
             }
@@ -435,7 +359,14 @@ class Inbed {
             $this->tag = 'youtube';
         else if(strpos($url, 'twitter.com')!==false && strpos($url, 'timelines')!==false)
             $this->tag = 'twitter-timeline';
-        else if(strpos($url, 'vimeo')!==false)
+        else if(strpos($url, 'today.com')!==false ) {
+            $this->tag = 'today';
+            $this->url = preg_replace('/\/video\//', '/offsite/', $url, 1);
+        } else if(strpos($url, 'nbcnews.com')!==false) {
+            $this->tag = 'nbcnews';
+            $urlarray = explode('-', $url);
+            $this->url = $urlarray[count($urlarray)-1];
+        } else if(strpos($url, 'vimeo')!==false)
             $this->tag = 'vimeo';
         else if(strpos($url, 'storify.com')!==false)
             $this->tag = 'storify';
@@ -445,6 +376,10 @@ class Inbed {
             $this->tag = 'soundcloud';
         else if(strpos($url, 'vine.co')!==false)
             $this->tag = 'vine';
+        else if(strpos($url, 'twitter.com')!==false) {
+        		$this->tag = 'twitter';
+        		$this->url = $url;
+        }
         switch($this->tag) {
             case 'soundcloud':
                 require_once dirname(__FILE__).'/soundcloud/Services/Soundcloud.php';
@@ -474,6 +409,11 @@ class Inbed {
                     if(isset($matches[1]))
                         $this->id = $matches[1];
                 }
+                break;
+            case 'fbvideo':
+								$url_parts = parse_url($url);
+								$url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'];
+                $this->url = $url;
                 break;
             case 'vimeo':
                 $matches = array();
@@ -518,6 +458,10 @@ class Inbed {
                     $this->id = $matches[1];
                 break;
             case 'twitter':
+            		$matches = array();
+                preg_match($this->twitter_content_regex, $url, $matches);
+                if(isset($matches[1]))
+                    $this->url = $matches[1];
                 break;
             case 'gist':
                 $this->url = str_replace('.js', '', $url);
@@ -527,14 +471,37 @@ class Inbed {
         }
     }
 
-    private function setContent($content) {
+    private function setContent($content, $tag) {
         $content = str_replace(array("\r\n", "\n", "\r"), '', $content);
-        if(strpos($content, 'theplatform.com')!==false) {
-            $this->tag = 'msnbc';
+        if(strpos($content, 'twitter.com')!==false) {
+            $this->tag = $tag;
             $matches = array();
-            preg_match($this->msnbc_content_regex, $content, $matches);
+            preg_match($this->twitter_content_regex, $content, $matches);
             if(isset($matches[1])) {
-                $this->url = 'http://player.theplatform.com/'.$matches[1];
+                $this->content = $matches[1];
+                $matches = array();
+                preg_match($this->twitter_url_regex, $this->content, $matches);
+                if(isset($matches[1])) {
+                    $this->url = 'https://twitter.com'.$matches[1];
+                }
+            }
+        } else if(strpos($content, 'theplatform.com')!==false) {
+            $this->tag = $tag;
+
+            $dom = new DOMDocument();
+						$dom->loadHTML($content);
+						$this->url = $dom->getElementsByTagName('iframe')->item(0)->getAttribute('src');
+
+            if(isset($matches[0])) {
+                $this->url = $matches[0];
+            }
+        }
+         else if(strpos($content, 'today.com')!==false) {
+            $this->tag = $tag;
+            $matches = array();
+            preg_match($this->src_content_regex, $content, $matches);
+						if(isset($matches[1])) {
+            	$this->url = $matches[1];
             }
         }
     }
@@ -554,6 +521,9 @@ add_shortcode('storify', 'inbed');
 add_shortcode('flickr', 'inbed');
 add_shortcode('today', 'inbed');
 add_shortcode('msnbc', 'inbed');
+add_shortcode('nbc', 'inbed');
+add_shortcode('nbcnews', 'inbed');
+add_shortcode('fbvideo', 'inbed');
 add_shortcode('ustream', 'inbed');
 add_shortcode('image', 'inbed');
 add_shortcode('video', 'inbed');

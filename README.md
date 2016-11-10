@@ -41,9 +41,33 @@ To turn on autoplay, add in the autoplay setting to the tag:
 
     [instagram url="http://instagram.com/p/i9pZitqsAa/"]
 
-#### Gists
+#### NBC Video
+		
+wrap embed from nbc.com in opening and closing nbc shortcode brackets
+		
+    [nbc]<div itemprop="video" itemscope itemtype="http://schema.org/VideoObject"><iframe src="http://player.theplatform.com/p/NnzsPC/widget/select/media/guid/2410887629/3417380" width="480" height="270" frameBorder="0" seamless="seamless" allowFullScreen></iframe></div>[/nbc]
+    
+#### MSNBC
 
-    [gist url="https://gist.github.com/walker/8733217"]
+wrap embed from msnbc.com in opening and closing msnbc shortcode brackets
+
+    [msnbc]<iframe src='http://player.theplatform.com/p/7wvmTC/MSNBCEmbeddedOffSite?guid=n_lw_cblock_161109' height='500' width='635' scrolling='no' border='no' ></iframe>[/msnbc]
+    
+#### NBC News
+
+    [nbcnews url="http://www.nbcnews.com/video/-you-re-joking-what-people-around-the-world-really-think-804644931561"]
+    
+#### TODAY
+
+    [today url="http://www.today.com/video/billy-eichner-talks-billy-on-the-street-his-role-in-hairspray-live-804726851631"]
+    
+#### Facebook Video
+
+for square videos, set layout parameter to square
+
+    [fbvideo url="https://www.facebook.com/buzzfeed/videos/10155300775200329/"]
+    
+    [fbvideo url="https://www.facebook.com/joepahl/videos/vb.1346581527/10210669354913817/" layout="square"]
 
 #### Soundcloud
 
