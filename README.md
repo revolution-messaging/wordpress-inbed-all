@@ -151,9 +151,3 @@ Or with more:
 * ssl (string)  on or off. defaults to on.
 * iframe (string) on or off. defaults to off. javascript embed is used instead.
 * scrolling (string) on or off. defaults to on. this is for the iframe embed only.
-
-#### MSNBC
-
-Just paste the MSNBC embed tag between the "msnbc" shortcodes.
-
-    [msnbc]<iframe src='http://player.theplatform.com/p/2E2eJC/EmbeddedOffSite?guid=n_maddow_bblock_140228' height='500' width='635' scrolling='no' border='no' ></iframe>[/msnbc]
