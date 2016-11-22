@@ -508,6 +508,7 @@ $inbed = new Inbed();
 
 function inbed($atts=null, $content, $tag) {
     global $inbed;
+		$content = html_entity_decode($content);
     return $inbed->embed($atts, $content, $tag);
 }
 
@@ -536,3 +537,12 @@ add_shortcode('gist', 'inbed');
 add_shortcode('tweet', 'inbed');
 add_shortcode('twitter', 'inbed');
 add_shortcode('twitter-timeline', 'inbed');
+
+add_filter('no_texturize_shortcodes', 'inbed_all_no_texture', 1);
+
+function inbed_all_no_texture($shortcodes) {
+  $shortcodes[] = 'nbc';
+  $shortcodes[] = 'msnbc';
+  $shortcodes[] = 'fbpost';
+  return $shortcodes;
+}
