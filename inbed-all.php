@@ -320,6 +320,10 @@ class Inbed {
                     return '<div class="inbed inbed-video fbvideo '. $this->layout .'"><iframe src="https://www.facebook.com/plugins/video.php?href=' . urlencode($this->url) . '" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe></div>';
 										break;
 
+								case 'fbpost':
+                    return '<div class="fbpost">' . $this->url . '</div>';
+										break;
+
                 case 'nbc':
                     return '<div class="inbed inbed-video nbc" itemprop="video" itemscope itemtype="http://schema.org/VideoObject"><iframe src="'.$this->url.'" frameBorder="0" seamless="seamless" allowFullScreen></iframe></div>';
                     break;
@@ -485,24 +489,17 @@ class Inbed {
                     $this->url = 'https://twitter.com'.$matches[1];
                 }
             }
-        } else if(strpos($content, 'theplatform.com')!==false) {
+        }
+        // MSNBC and NBC
+        else if(strpos($content, 'theplatform.com')!==false) {
             $this->tag = $tag;
-
             $dom = new DOMDocument();
 						$dom->loadHTML($content);
 						$this->url = $dom->getElementsByTagName('iframe')->item(0)->getAttribute('src');
-
-            if(isset($matches[0])) {
-                $this->url = $matches[0];
-            }
         }
-         else if(strpos($content, 'today.com')!==false) {
+        else if(strpos($content, 'facebook.com')!==false) {
             $this->tag = $tag;
-            $matches = array();
-            preg_match($this->src_content_regex, $content, $matches);
-						if(isset($matches[1])) {
-            	$this->url = $matches[1];
-            }
+            $this->url = $content;
         }
     }
 }
@@ -524,6 +521,7 @@ add_shortcode('msnbc', 'inbed');
 add_shortcode('nbc', 'inbed');
 add_shortcode('nbcnews', 'inbed');
 add_shortcode('fbvideo', 'inbed');
+add_shortcode('fbpost', 'inbed');
 add_shortcode('ustream', 'inbed');
 add_shortcode('image', 'inbed');
 add_shortcode('video', 'inbed');
