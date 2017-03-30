@@ -196,7 +196,7 @@ class Inbed {
                     return '<div class="inbed inbed-video ustream"><iframe src="//www.ustream.tv/embed/'.$this->id.'?v=3&amp;wmode=direct" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'instagram':
-                    return '<div class="inbed inbed-image instagram"><iframe src="//instagram.com/p/'.$this->id.'/embed/" frameborder="0" scrolling="no" allowtransparency="true" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+                    return '<div class="inbed inbed-image instagram ' . $layout . '"><iframe src="//instagram.com/p/'.$this->id.'/embed/" frameborder="0" scrolling="no" allowtransparency="true" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
                     break;
                 case 'vine':
                     $vine_url = 'https://vine.co/v/'.$this->id.'/embed'.'/';
@@ -321,7 +321,7 @@ class Inbed {
 										break;
 
 								case 'fbpost':
-                    return '<div class="fbpost">' . $this->url . '</div>';
+                    return '<div class="fbpost">' . $content . '</div>';
 										break;
 
                 case 'nbc':
