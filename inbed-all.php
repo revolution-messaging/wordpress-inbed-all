@@ -77,6 +77,17 @@ class Inbed {
             $this->id = $id;
         }
 
+        if ('untappd-menu' === $tag) {
+	      	if ($location && $theme) {
+						return '<div id="menu-container"></div>
+<script type="text/javascript">
+  !function(e,n){var t=document.createElement("script"),a=document.getElementsByTagName("script")[0];t.async=1,a.parentNode.insertBefore(t,a),t.onload=t.onreadystatechange=function(e,a){(a||!t.readyState||/loaded|complete/.test(t.readyState))&&(t.onload=t.onreadystatechange=null,t=void 0,a||n&&n())},t.src=e}("https://embed-menu-preloader.untappdapi.com/embed-menu-preloader.min.js",function(){PreloadEmbedMenu("menu-container",' . $location . ',' . $theme . ')});
+</script>';
+	      	} else {
+		      	return '<p>You must define a location ID an theme ID.</p>';
+	      	}
+        }
+
         if(isset($url)) {
 
             if($this->tag=='soundcloud' && !defined('SOUNDCLOUD_CLIENT_ID')) {
@@ -537,6 +548,7 @@ add_shortcode('gist', 'inbed');
 add_shortcode('tweet', 'inbed');
 add_shortcode('twitter', 'inbed');
 add_shortcode('twitter-timeline', 'inbed');
+add_shortcode('untappd-menu', 'inbed');
 
 add_filter('no_texturize_shortcodes', 'inbed_all_no_texture', 1);
 
